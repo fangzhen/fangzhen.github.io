@@ -1,0 +1,31 @@
+Load lisp file
+
+https://stackoverflow.com/questions/2580650/how-can-i-reload-emacs-after-changing-it
+
+You can use the command load-file (M-x load-file, then press return twice to accept the default filename, which is the current file being edited).
+
+You can also just move the point to the end of any sexp and press C-xC-e to execute just that sexp. Usually it's not necessary to reload the whole file if you're just changing a line or two.
+
+clangd
+sudo dnf install clang-tools-extra
+
+grub2.02
+$ ./autogen.sh
+$ ./configure
+$ bear make
+
+https://releases.llvm.org/9.0.0/tools/clang/tools/extra/docs/clangd/Installation.html
+
+https://www.mortens.dev/blog/emacs-and-the-language-server-protocol/
+
+clangd 用不了
+8.0 不会index project
+9.0 会自动index，但是很快coredump
+
+
+https://github.com/porterjamesj/virtualenvwrapper.el/blob/5649028ea0c049cb7dfa2105285dee9c00d189fb/virtualenvwrapper.el#L93-L102
+(projectile-project-root)
+
+
+
+https://lists.fedoraproject.org/pipermail/devel/2012-January/160917.html

@@ -1,0 +1,15 @@
+---
+layout: default
+---
+
+<div class="home">
+  {%- assign coll = site.collections | where: "label", page.collection | first -%}
+  <h1 class="page-heading">{{ page.description | default: coll.label }}</h1>
+
+  {{ content }}
+
+  {% assign all_posts = coll.docs | sort: "date" | reverse %}
+  {% include post_list.html %}
+  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
+
+</div>
