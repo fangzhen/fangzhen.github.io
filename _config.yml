@@ -43,3 +43,5 @@ collections:
     output: true
   cases:
     output: true
+  scraps:
+    output: true
