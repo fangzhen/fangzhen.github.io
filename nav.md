@@ -2,11 +2,11 @@
 layout: page
 ---
 **本站导航**
-* [blog](/blog)
+* [blog](/blog/)
 
    技术博客
 
-* [elpa](/elpa)
+* [elpa](/elpa/)
 
   mirror to [GNU elpa](https://elpa.gnu.org/)
 
