@@ -24,10 +24,11 @@
             {%- endif -%}
           {%- endfor -%}
 
-          {% for collection in site.collections %}
+	  {% assign all_collections = site.collections | sort: "order" %}
+          {% for collection in all_collections %}
             {% for doc in collection.docs %}
               {% if doc.site_header %}
-                <a class="page-link" href="{{ doc.url | relative_url }}">{{ doc.title | escape }}</a>
+	      <a class="page-link" href="{{ doc.url | relative_url }}">{{ doc.title | escape }}</a>
               {% endif %}
             {% endfor %}
           {% endfor %}

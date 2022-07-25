@@ -41,7 +41,10 @@ google_analytics: true
 collections:
   notes:
     output: true
+    order: 10
   cases:
     output: true
+    order: 20
   scraps:
     output: true
+    order: 25
