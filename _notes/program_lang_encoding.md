@@ -1,13 +1,14 @@
 ---
 layout: post
-title: 编程语言中字符串、编码等
-tags: python encoding
+title: 编程语言中字符串表示
+tags: python encoding string
 date: 2020-11-08
+update: 2022-07-26
 ---
 
-理论先行
-=========
-字符串编码问题的时候，我们需要注意区分几个概念
+## 理论先行
+
+考虑字符串编码相关问题的时候，需要注意区分几个概念
 
 1. 字符串对象
 
@@ -36,13 +37,14 @@ date: 2020-11-08
 
 1. 运行时字符串在内存中的表示
 
-   例如在C中，就是字节数组并以`\n`结尾；在 Python2 中，也可以认为是字符数组。Python3或者Python2的Unicode的内部表示可能分不同的情况（PEP-393）。
+   例如在C中，就是字节数组并以`\n`结尾；在 Python2 中，`str`也可以认为是字节数组。Python3或者Python2的Unicode的内部表示可能分不同的情况（PEP-393）。
    可以参考下这个问题 https://stackoverflow.com/questions/26079392/how-is-unicode-represented-internally-in-python
 
    对语言的使用来说，一般情况下不需要关心内部表示。
 
-Python 2 & 3
-=============
+## Case Study
+### Python 2 & 3
+
 python 2 & 3 的字符串差别非常大。
 
 * Python 2 中, `str`实际上是以byte序列保存，组成单元是字节。另外类型`bytes` 是 `str`的别名。另外`unicode`类型是Unicode字符串，组成单元是Unicode字符。
@@ -50,10 +52,10 @@ python 2 & 3 的字符串差别非常大。
 
 PyCon 2012 上一个演讲，对Python2和Python3字符串编码相关讲的比较清楚了 https://nedbatchelder.com/text/unipain.html
 
-Case Study
----------------
-
 ### String Literal
+
+Python 2和Python 3中字符串字面量的基础表示。
+
 ```
 $ python2
 Python 2.7.17 (default, Oct 20 2019, 00:00:00)
@@ -80,12 +82,12 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 ### Text/binary mode
 
-Python以text mode读入，返回为`str`，以binary模式读入，返回为`str`(Python2)， `bytes`(Python3)。
+Python以text mode读入，返回为`str`，以binary模式读入，返回为`str`(Python2)或`bytes`(Python3)。
 
 这里面会带来一些很微妙的兼容性问题。Python2中两种模式读入的数据类型是相同的，但Python3中不同。
-例如，json.dump。Python3中被dump的对象中有bytes的话会失败。当然可以通过自定义json encoder来实现。
+例如，`json.dumps()`。Python3中被dump的对象中有bytes的话会失败。当然可以通过自定义json encoder来实现。
 
-但这里需要理解的是为什么Python3中默认bytes不能json dump —— Python3中的bytes不是`str`，它俩的相互转化需要codec。
+但这里需要理解的是为什么Python3中默认bytes不能json dump —— Python3中的bytes不是`str`，bytes转化为`str`需要decode。
 而默认情况下假设一个编码是不明智的。否则很可能把错误延后——很可能某个时候会发现系统中有乱码了。
 
 Python 2
@@ -183,3 +185,9 @@ $ echo 你| PYTHONIOENCODING=gbk python -u codec.py 你 | hexdump -C
 000000a2
 ```
 hexdump 的结果可以看到乱码两个位置的输出其实是 `你` 的gbk编码：`c4 e3`
+
+## json/yaml等序列化格式
+不管是json/yaml或者是其他类似的序列化格式，不管是python/go或者其他语言，都是类似的逻辑。**序列化/反序列化是编程语言对象与字符流的相互转化**（如[yaml](https://yaml.org/spec/1.2.2/#31-processes)）。字符流在多数变成语言中即该语言的字符串类型（如python3的`str`，go中的字符串）。
+字符流通过编码（如utf-8）转换成字节流，然后可以直接序列化到文件。
+
+在不同语言或库提供的api中，有的提供编程语言对象与字符串的api，如[Python的json库](https://docs.python.org/3/library/json.html)；有的提供编程语言对象与字节流的api，如[golang的json库](https://pkg.go.dev/encoding/json)
