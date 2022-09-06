@@ -108,6 +108,11 @@ update: 2021-09-27
    osdmap e86 pg 4.24 (4.24) -> up [2,0,4] acting [2,0,4]
    ```
 
+9. 针对pg可以做scrub或deep-scrub
+   ```
+   ceph pg deep-scrub 4.24
+   ```
+
 更多参考：
 * <https://www.sebastien-han.fr/blog/2012/07/16/rbd-objects/>
 * <https://hustcat.github.io/rbd-image-internal-in-ceph/>

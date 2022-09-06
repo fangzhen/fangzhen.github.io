@@ -1,4 +1,6 @@
 slab
+https://easystack.atlassian.net/browse/EAS-88771
+
 SLUB: 整体比较清晰 https://www.cnblogs.com/tolimit/p/4654109.html
 https://events.static.linuxfound.org/sites/events/files/slides/slaballocators.pdf
 https://blog.csdn.net/u010246947/article/details/10133101
@@ -60,9 +62,9 @@ node 1 cpus: 2 3
 node 1 size: 0 MB
 node 1 free: 0 MB
 node distances:
-node   0   1 
-  0:  10  20 
-  1:  20  10 
+node   0   1
+  0:  10  20
+  1:  20  10
 ```
 guest numa topology 配置
 https://www.cnblogs.com/allcloud/p/5021131.html
@@ -112,7 +114,7 @@ gcc version 8.3.1 20190311 (Red Hat 8.3.1-3) (GCC)
 重新编译后就可以正常rmmod了。
 
 
-### getcpu putcpu on_each_cpu 
+### getcpu putcpu on_each_cpu
 https://stackoverflow.com/questions/36288877/isolate-kernel-module-to-a-specific-core-using-cpuset
 https://blog.csdn.net/Rafe_ma/article/details/72638509
 https://stackoverflow.com/questions/34633600/how-to-execute-a-piece-of-kernel-code-on-all-cpus
