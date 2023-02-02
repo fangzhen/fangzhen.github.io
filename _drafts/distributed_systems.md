@@ -28,6 +28,15 @@
 锁：
   手段 mutex，lock，monitor，read/write lock，semaphore, event
 
+partition vs replication
+
+建模：
+  在一定的限制条件内讨论
+    如果现实不满足限制条件，算法应该以何种方式失败。能检测出来条件不满足，算法停止 vs. 检测不出来，给出错误结果
+  任何限制条件的细微差别都可能导致不同的算法/性能优化/一致性/availability差异
+
+原子性跟分布式什么关系？
+
 data replicas -> 一致性 共识 -> data repliaca 和leader election 本质一样？
 
 producer, consumer
@@ -39,11 +48,11 @@ distributed system:
 整体
 https://cloud.tencent.com/developer/article/1422177
 https://www.zhihu.com/question/23645117
+http://book.mixu.net/distsys/ http://book.mixu.net/distsys/single-page.html
 
+时钟：
+解决分布式系统下的先后顺序问题： 逻辑时钟 向量时钟 http://yang.observer/2020/07/26/time-lamport-logical-time/
 
-
-
-consensus: paxos raft
 consistency
 http://blog.kongfy.com/2016/08/%E8%A2%AB%E8%AF%AF%E7%94%A8%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7/
 https://www.jiqizhixin.com/articles/2020-02-20-3
@@ -65,6 +74,7 @@ consensus：
 不要求所有节点可用 <-
 共识算法是达成一致性的手段。共识侧重从过程的视角来描述。
 
+consensus: paxos raft
 
 DB ACID - 跟数据replica没关系，主要是多事务（并发）
 C：内部一致性，数据库内部状态保持正确，满足数据完整性要求。
