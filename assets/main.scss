@@ -1,0 +1,16 @@
+---
+---
+
+@import "minima";
+
+.site-header {
+  border-top: 0;
+}
+
+body {
+    -webkit-font-feature-settings: "none";
+       -moz-font-feature-settings: "none";
+         -o-font-feature-settings: "none";
+            font-feature-settings: "none";
+    font-kerning: none;
+}
