@@ -90,9 +90,20 @@ C：内部一致性，数据库内部状态保持正确，满足数据完整性�
 
 单节点多进程和跨节点 本质区别是什么（通信不可靠？）
 
+concurrency:
 coroutine:
 python/rust async/await
 eventloop + yield/send/channel
 refs: mio tokio
 goroutine is beyond coroutine
 
+concurrency系列文章
+https://www.tedinski.com/2018/11/06/concurrency-models.html
+
+有些人强调应该把concurrency和parallelism明确区分开，两者是完全不同的问题。
+https://ghcmutterings.wordpress.com/2009/10/06/parallelism-concurrency/
+https://existentialtype.wordpress.com/2011/03/17/parallelism-is-not-concurrency/
+https://www.tedinski.com/2018/10/16/concurrency-vs-parallelism.html
+
+concurrency model 和分布式系统架构的相似性
+https://jenkov.com/tutorials/java-concurrency/concurrency-models.html
