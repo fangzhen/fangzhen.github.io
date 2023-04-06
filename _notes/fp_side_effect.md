@@ -250,4 +250,6 @@ main = let (_, r1) = countdown count 1
   - <https://news.ycombinator.com/item?id=16419877>
   - <https://stackoverflow.com/questions/4063778/in-what-sense-is-the-io-monad-pure>
   - <https://stackoverflow.com/questions/41829618/functional-programming-where-does-the-side-effect-actually-happen>
-* <https://wiki.haskell.org/All_About_Monads>
+* 其他Moand
+  - <https://wiki.haskell.org/All_About_Monads>
+  - [详解函数式编程之Monad](https://netcan.github.io/2020/09/30/%E8%AF%A6%E8%A7%A3%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E4%B9%8BMonad/)
