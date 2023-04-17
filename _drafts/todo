@@ -127,45 +127,11 @@ https://stackoverflow.com/questions/45113527/why-does-mulss-take-only-3-cycles-o
 https://superuser.com/questions/643442/latency-of-cpu-instructions-on-x86-and-x64-processors
 
 
-GPU
-https://stackoverflow.com/questions/1697842/do-graphic-cards-have-instruction-sets-of-their-own
-https://www.quora.com/What-are-graphic-cards-drivers-for
-https://computer.howstuffworks.com/graphics-card.htm
-https://www.howtogeek.com/122274/how-do-the-cpu-and-gpu-interact-to-render-computer-graphics/
-https://www.bestcpus.com/how-do-the-cpu-and-gpu-work-together/
-https://www.quora.com/How-do-CPU-and-GPU-work-together-What-if-one-of-them-is-faster-than-the-other
-
 
 
 memory - segment, page table
 x86 CPU mode
- 写的比较清楚详细：https://blog.csdn.net/liuyez123/article/details/51096914
- protected mode:
- long mode:
-
-        段         页表
- 逻辑地址 -> 线性地址 -> 物理地址
-
- GDTR存放 GDT的线性地址
-
- 页表：CR3 -> 物理地址
-
-                GDTR -> GDT  -> segment descriptor -> base -> liner address
- logic.CS -> segment selector -> |            logic.offset -> |
-
-物理地址中存放 多级页表， 页表管理的所有page（包括GDT,等）。如果先开启分段再分页，应该保证开启分页前后GDTR中的地址对应到同样的物理地址上。
-
-page table是per-process的。
-GDT的线性地址对所有进程的页表，需要映射到相同的物理地址。
-
-CR3 - 页表
-GDTR - GDT
-
-分配一块物理内存存储所有物理页信息 pages
-page table 映射上述物理地址到线性地址
-更新 pages的地址为线性地址
-映射GDT
-更新GDTR CR3
+ x86不同模式以及写的比较清楚详细，略长：https://blog.csdn.net/liuyez123/article/details/51096914
 
 linux memory layout
 https://www.kernel.org/doc/Documentation/x86/x86_64/mm.txt
@@ -173,7 +139,6 @@ https://www.kernel.org/doc/Documentation/x86/x86_64/mm.txt
 linux中 对TSS的使用 https://blog.csdn.net/rikeyone/article/details/110507911
 http://liujunming.top/2020/01/18/%E6%B5%85%E8%B0%88tss/
 ldt etc https://stackoverflow.com/questions/38600901/ldt-and-paging-in-linux-for-x86-processors
-
 
 linux 页表建立
 https://blog.csdn.net/whenloce/article/details/88831089
@@ -186,15 +151,10 @@ https://cloud.tencent.com/developer/article/1645885
 https://www.htmlds.com/key/linux%E5%86%85%E6%A0%B8%E5%85%A5%E5%8F%A3%E5%87%BD%E6%95%B0.html
 https://www.kernel.org/doc/Documentation/efi-stub.txt
 
-先console还是先内存初始化？
-
-
 jekyll:
 使用tag
 https://www.untangled.dev/2020/06/02/tag-management-jekyll/
 https://codinfox.github.io/dev/2015/03/06/use-tags-and-categories-in-your-jekyll-based-github-pages/
-
-
 
 
 *** rust

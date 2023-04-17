@@ -61,7 +61,7 @@ FreePool: Frees allocated pool
 GetMemoryMap: Returns the current boot services memory map and memory map key.
 ```
 
-应当注意，在UEFI image里显式分配的内存应该显式释放掉，UEFI image退出并不会像操作系统的进程退出一样自动回收内存。
+**应当注意，在UEFI image里显式分配的内存应该显式释放掉，UEFI image退出并不会像操作系统的进程退出一样自动回收内存。**
 
 UEFI会把内存分成不同的类型来管理，如`EfiBootServicesCode`，`EfiBootServicesData`。`EfiConventionalMemory`表示未分配的内存。
 
@@ -83,7 +83,8 @@ UEFI会把内存分成不同的类型来管理，如`EfiBootServicesCode`，`Efi
 > ```
 > 应当注意，通过`AllocatePool`等分配或释放内存有可能造成memory map的变化。
 >
-> 函数调用，局部变量分配等栈上的内存使用应该不会造成memory map 变化。因为栈使用了EfiBootServicesData的内存，最小128k。x86_64架构下上栈向下生长，但[局部变量的顺序可能被编译器调整](https://stackoverflow.com/questions/54395558/why-do-subsequent-rust-variables-increment-the-stack-pointer-instead-of-decremen)。
+> 函数调用，局部变量分配等栈上的内存使用应该不会造成memory map 变化。因为栈使用的内存仍被标记为`EfiConventionalMemory`(至少在qemu上用OVMF固件测试如此)，UEFI spec要求栈最小128k。
+> x86_64架构下上栈向下生长，但[局部变量的顺序可能被编译器调整](https://stackoverflow.com/questions/54395558/why-do-subsequent-rust-variables-increment-the-stack-pointer-instead-of-decremen)。
 
 
 > **`AllocatePool`**最后一个参数是二级指针`void **buffer`，指向分配的内存地址。原因是需要在`*buffer`中存储分配的内存地址，需要传指向`*buffer`的指针。对使用方来说，可以直接当作指针使用，避免类型转换。
