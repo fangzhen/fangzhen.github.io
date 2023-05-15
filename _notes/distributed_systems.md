@@ -262,7 +262,9 @@ CPU和内存之间速度差别越来越大导致了CPU cache的引入。多核CP
   - https://existentialtype.wordpress.com/2011/03/17/parallelism-is-not-concurrency/
   - https://www.tedinski.com/2018/10/16/concurrency-vs-parallelism.html
   - https://jenkov.com/tutorials/java-concurrency/concurrency-models.html
-    concurrency model 和分布式系统架构的相似性
+    [缓存更新的套路](https://coolshell.cn/articles/17416.html)
+    涉及并发模型、分布式系统架构、计算机体系结构等的相关性思考，这也是本文的一个基本观点。
+
 
 [lamport, 1979]: https://www.microsoft.com/en-us/research/uploads/prod/2016/12/How-to-Make-a-Multiprocessor-Computer-That-Correctly-Executes-Multiprocess-Programs.pdf
 [Herlihy & Wing, 1990]: [Linearizability: A Correctness Condition for Concurrent Objects](https://cs.brown.edu/~mph/HerlihyW90/p463-herlihy.pdf)提出。
