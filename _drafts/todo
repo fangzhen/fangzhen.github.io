@@ -151,11 +151,6 @@ https://cloud.tencent.com/developer/article/1645885
 https://www.htmlds.com/key/linux%E5%86%85%E6%A0%B8%E5%85%A5%E5%8F%A3%E5%87%BD%E6%95%B0.html
 https://www.kernel.org/doc/Documentation/efi-stub.txt
 
-jekyll:
-使用tag
-https://www.untangled.dev/2020/06/02/tag-management-jekyll/
-https://codinfox.github.io/dev/2015/03/06/use-tags-and-categories-in-your-jekyll-based-github-pages/
-
 
 *** rust
 rust attributes: 哪里有全的reference？
@@ -214,3 +209,9 @@ int syscall process etc.
 
 asyncio
 https://realpython.com/async-io-python/
+
+jekyll:
+使用tag
+https://www.untangled.dev/2020/06/02/tag-management-jekyll/
+https://codinfox.github.io/dev/2015/03/06/use-tags-and-categories-in-your-jekyll-based-github-pages/
+*** github pages 并排排版，方便边看代码边看分析

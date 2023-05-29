@@ -1,6 +1,15 @@
+memblock
+[A quick history of early-boot memory allocators](https://lwn.net/Articles/761215/)
+https://www.kernel.org/doc/html/v4.19/core-api/boot-time-mm.html
+
+memory in general
+[Understanding The Linux Virtual Memory Manager by Mel Gorman]https://www.kernel.org/doc/gorman/pdf/understand.pdf
+https://richardweiyang-2.gitbook.io/kernel-exploring/00-memory_a_bottom_up_view
+[Linux核心概念详解]https://s3.shizhz.me memory部分
+https://0xax.gitbooks.io/linux-insides/content/MM/
+
 slab
 https://easystack.atlassian.net/browse/EAS-88771
-
 SLUB: 整体比较清晰 https://www.cnblogs.com/tolimit/p/4654109.html
 https://events.static.linuxfound.org/sites/events/files/slides/slaballocators.pdf
 https://blog.csdn.net/u010246947/article/details/10133101

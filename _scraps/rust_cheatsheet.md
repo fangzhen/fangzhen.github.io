@@ -132,3 +132,12 @@ rustup 管理的某个rust installation称为toolchain。可以给toolchain配�
 `cargo +nightly build` 使用`nightly` toolchain。
 
 可以在项目目录中通过`rust-toolchain`或`rust-toolchain.toml`来指定当前项目使用的toolchain。
+
+### toolchain 和target的关系
+toolchain对应的是当前机器上的rust工具链，如cargo，rustc，rust-analyzer，也就是对应的工具要在本地运行；而target是当前代码要编译的目标环境，跟本地的环境没关系。
+
+例如x86_64的linux机器上开发要运行在aarch64的linux下的应用，那么有可能
+toolchain为stable-x86_64-unknown-linux-gnu，
+target为aarch64-unknown-linux-gnu。
+
+所以toolchain的完整格式虽然为`<channel>[-<date>][-<host>]`，但一般只需指定channel为stable/nightly。

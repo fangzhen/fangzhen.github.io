@@ -82,3 +82,11 @@ relative 是指相对编译目录的地址，默认值。
     rm io/open.o
     make sysdep-CFLAGS='-save-temps=obj'
     ```
+
+
+## Debug UEFI application with qemu
+基本思路： qemu支持`-gdb`参数启动gdb server。通过gdb或lldb可以远程调试。
+
+可参考：
+<https://wiki.osdev.org/Debugging_UEFI_applications_with_GDB>
+<https://github.com/tianocore/tianocore.github.io/wiki/How-to-debug-OVMF-with-QEMU-using-GDB>

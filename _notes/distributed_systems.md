@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 分布式算法概述
-tags: distributed systems, distribute algorithms
+tags: ["distributed systems", "distribute algorithms"]
 date: 2023-03-13
 update: 2023-04-07
 ---
