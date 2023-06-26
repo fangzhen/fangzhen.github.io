@@ -5,8 +5,9 @@ tags: [Rust, "Serial Port", UEFI]
 date: 2023-04-07
 update: 2023-06-14
 ---
-本文主要描述x86_64架构下UEFI的OSLoader如何一步步做到执行用户空间执行代码。
-测试环境使用qemu虚拟机。
+本文主要描述x86_64架构下，UEFI的OSLoader从启动如何一步步做到执行用户空间执行代码。核心是内存分段/分页管理与特权级切换。
+
+> 测试环境使用qemu虚拟机。对应代码为[blog/userspace](https://github.com/fangzhen/timetomb/tree/blog/userspace)
 
 ## Overview
 把kernel直接构建为UEFI Image，通过UEFI firmware直接加载执行。本文主要包括一下几个步骤：
@@ -28,8 +29,8 @@ UEFI Firmware运行在64-bit mode下。本文代码也都运行在64-bit mode下
 
 ## 基础日志系统
 ### 文本输入输出
-UEFI中在ExitBootService之前可以使用Console Support Protocols做输入输出，包括文本和图形，但是在ExitBootService之后，都无法直接使用。但是在操作系统开发早期阶段，输出是debug的重要手段。
-在UEFI启动的情况下，想要在ExitBootService之后想要进行输出，大概有两个方案。：
+UEFI中在调用`ExitBootService`之前可以使用Console Support Protocols做输入输出，包括文本和图形，但是在调用`ExitBootService`之后，都无法直接使用。但是在操作系统开发早期阶段，输出是debug的重要手段。
+在UEFI启动的情况下，想要在调用`ExitBootService`之后进行输出，大概有两个方案。：
 1. 使用串口输出。为了简单，本文使用该方案。
 1. 通过frame buffer实现文本输出，可以不依赖串口，显示在图形输出设备上。（可以参考文末的参考链接）
 
@@ -63,21 +64,22 @@ UEFI Boot Service提供了`GetMemoryMap`方法来获取物理内存信息。
 上一步获取到UEFI的物理内存映射后，通过`generate_memblock_from_uefi_map`把物理内存映射转换为memblock区域。
 
 ## 配置分页
-### 地址转换：
-x86架构下，地址转换过程为：逻辑地址 -> 线性地址 -> 物理地址。指令的内存地址使用逻辑地址，最终需要转换成物理地址访问内存。关于地址转换的资料很多，本文只截取Intel SDM的两个图作为参考和备忘。
+### 地址转换
+x86架构下，地址转换过程为：逻辑地址 -> 线性地址 -> 物理地址。指令的内存地址使用逻辑地址，最终需要转换成物理地址访问内存。
+关于地址转换的资料很多，此处只截取Intel SDM的两个图作为参考和备忘。
 
-![分段与分页](../assets/static/x86_segmentation_and_paging.png)
-![逻辑地址到线性地址](../assets/static/x86_logical_to_linear_address.png)
+![分段与分页](../assets/static/timetomb/x86_segmentation_and_paging.png)
+![逻辑地址到线性地址](../assets/static/timetomb/x86_logical_to_linear_address.png)
 
 **四级页表的线性地址到物理地址转换**(sdm, v3, chapter 4.5):
 
-![4K页线性地址转换](../assets/static/x86_paging_4k.png)
+![4K页线性地址转换](../assets/static/timetomb/x86_paging_4k.png)
 注意上图中从CR3 一层层找到各级页表，用到的地址都是物理地址。
 
 另外64-bit下，分页机制是强制打开的。UEFI firmware预设的页表中线性地址和物理地址是相同的。
 
 ### Virtual Memory Layout
-我们的kernel需要构建自己的页表。目前只支持4级页表，页大小为4K。
+我们的kernel需要构建自己的页表。我们目前只支持4级页表，页大小为4K。
 ```
 ========================================================================================================================
     Start addr    |   Offset   |     End addr     |  Size   | VM area description
@@ -88,7 +90,7 @@ __________________|____________|__________________|_________|___________________
 __________________|____________|__________________|_________|____________________________________________________________
 ```
 
-目前只使用两块虚拟地址空间：
+目前只使用了两块虚拟地址空间：
 1. 高地址`0xffff888000000000`开始映射所有物理内存。
 2. 保留UEFI firmware load的 kernel text, kernel data等区域。保留此区域是为了简化当前开发，否则我们需要做kernel代码的重定位。
 
@@ -97,7 +99,69 @@ __________________|____________|__________________|_________|___________________
 在切换页表前，先通过mmemblock分配器分配新的内核栈空间，在切换页表后立即切换到新内核栈。
 切换页表和切换内核栈之间不要有任何栈操作，因为我们新的页表中没有映射原来的内核栈。
 
-## 配置GDT和TSS
+## 配置分段
+### 段描述符
+![segment descriptor](../assets/static/timetomb/x86_segment_descriptor.png)
+段描述符分为几类，S和Type字段区分：
+
+| S=1 | 代码段或数据段描述符                                                     |
+| S=0 | 系统描述符，包括系统段描述符，指向系统段（包括LDT, TSS）和门描述符，指向代码段中的地址（包括Call-gate, Intrrupt-gate, Trap-gate）或包含TSS的段选择子 （Task-gate） |
+
+**64-bit下**
+* 分段机制已经基本禁用，段基址和段限长基本不用了，因此代码段和数据段描述符格式跟32位相同，还是8字节。
+* 硬件任务切换机制已经去掉，task gate描述符虽然还存在，但已经基本没有地方可以用到。TSS段的内容变成：
+  ![64 bit TSS 段 格式](../assets/static/timetomb/x86_64_bit_tss_format.png)
+* 其他系统描述符都扩充到了16字节，以容纳64位地址。
+
+### 特权级检查
+Ref vol3, chapter 5: Protection.
+
+x86 CPU有四个特权级，0到3；数字越大代码更低的特权级。
+CPU有三种特权级相关的属性：
+* CPL：当前运行任务的特权级。位于CS和SS段寄存器；
+* DPL：段描述符的特权级。位于段描述符的DPL字段；
+* RPL：段选择子中的RPL字段。
+
+**特权级在段选择子加载到段寄存器时检查。**
+
+#### 访问数据段
+当处理器把数据段或非一致性代码段的段选择子加载到DS, ES, FS, GS时做如下检查：
+![privilege check for data access](../assets/static/timetomb/x86_privilege_check_data.png)
+
+需要`CPL<=DPL and RPL<=DPL`。
+加载SS时，要求三者都相等：`CPL=RPL=DPL`
+
+加载一致性代码段到数据段寄存器总是合法的，因为一致性代码段的有效特权级和CPL相同。
+
+#### 代码段之间转移时的检查
+代码之间跳转有集中方式：
+1. JMP/CALL指令指向代码段的段选择子，或指向调用门描述符，门描述符中包含代码段的段选择子
+2. JMP/CALL指令通过TSS或任务门跳转，64bit下已经不支持这种方式
+3. 中断和异常处理
+4. 系统调用：SYSENTER/SYSEXIT，SYSCALL/SYSRET。
+
+下面只讨论第一种。
+![privilege check for control transfer without using a gate](../assets/static/timetomb/x86_privilege_check_code.png)
+![privilege check for control transfer with call gate](../assets/static/timetomb/x86_privilege_check_call_gate.png)
+
+|                | 不使用gate                                                                                 | 使用Call Gate; JMP指令              | 使用Call Gate; CALL指令             |
+| 非一致性代码段 | CPL==DPL，而且要求RPL<=CPL，也就是RPL其实基本没用。                                        | CPL<= G_DPL; RPL<=G_DPL; CPL==C_DPL | CPL<= G_DPL; RPL<=G_DPL; CPL>=C_DPL |
+| 一致性代码段   | CPL>=DPL; RPL 不检查；跳转后CPL不变。可以用于userspace代码访问kernel代码，但不需要高特权级 | CPL<= G_DPL; RPL<=G_DPL; CPL>=C_DPL | CPL<= G_DPL; RPL<=G_DPL; CPL>=C_DPL |
+| 说明           | 只能在相同特权级间跳转                                                                     | 只能在相同特权级间跳转              | 可以跳转到更高(数字更低)特权级      |
+
+call gate的检查可以理解为分成两部分：
+1. 对访问call gate的检查，和不使用gate一样，都需要CPL和RPL都小于DPL(G_DPL)。
+2. 对目的代码段的检查：通过call指令+call gate可以转移到更高特权级。
+
+如果特权级变化，CPU会进行栈切换。新的rsp从TSS中获取，新栈的格式如下：
+![stack layout after far call](../assets/static/timetomb/x86_call_gate_stack.png)
+
+RET指令用于从CALL指令返回。如果涉及到特权级变化，也会进行特权级检查。
+
+对于CALL指令来说，特权级只会变高，转移后数据段寄存器不需要检查，肯定有权限。
+而RET指令返回后如果特权级降低，会检查DS, ES, FS, GS段寄存器的内容，如果无权访问，会把对应的段寄存器加载为null选择子。
+
+> 实际操作系统中，如Linux kernel，并没有使用call gate。
 
 ### GDT
 全局描述表位于内存中。全局描述表的条目描述及规定了不同内存分区的基地址、大小和访问等特权如可执行和可写等。GDT第一项为保留项。我们把kernel space和userspace分别配置不同段。
@@ -122,6 +186,10 @@ long mode 下系统描述符（包括TSS描述符）占用两个entry（8*2=16�
 TSS只能在GDT中，不能在LDT/IDT中。
 sdm说操作系统必须至少创建一个TSS段，而且使用`LTR`加载到`TR`寄存器。（但是技术上似乎应该不是必须的，只是操作系统在中断处理时要用到。）
 
+> 如果包含IO permission map，TSS的段限长需要包含io permission map。
+
+通过LTR加载TSS段时，要求当前特权级必须为0，但是不会做其他特权级检查。**即使发生特权级切换，也不会像数据段寄存器一样重新检查TR寄存器的特权级。**
+
 综上，拟设置的GDT为：
 
 | Offset | Use                      | Base | Limit       | Access Byte | Flags |
@@ -137,37 +205,42 @@ sdm说操作系统必须至少创建一个TSS段，而且使用`LTR`加载到`TR
 
 `LGDT`指令加载的是线性地址，因此我们把GDT切换放到了页表切换之后。不过当前实现中，GDT所在的内存虚拟地址和物理地址是相同的。
 
-## 切换到用户空间
-long mode下，`syscall/sysret`对Intel/AMD是兼容的。对Intel 64 bit CPU，必须设置IA32_EFER.SCE位，才能使用`syscall/sysret`。
+## syscall/sysret
+特权级切换，除了通过调用门，64-bit模式下还可以通过`syscall/sysret`(兼容模式不支持)。
+对Intel 64 bit CPU，必须设置MSR IA32_EFER.SCE位，才能使用`syscall/sysret`。
 
-切换过程参考sysret的说明即可，具体代码可参考`sysret_to_userspace`。
+![MSRs used by syscall/sysret](../assets/static/timetomb/x86_syscall_msr.png)
 
+### syscall
+* 保存当前RFLAGS到R11, RIP到RCX；
+* 从上图MSR的对应位置获取目标CS selector, SS selector, RIP和RFLAGS。
+  其中new_RFLAGS=current_RFLAGS & IA32_FMASK；
+  CS_selector=IA32_STAR[47:32]; SS_selector=IA32_STAR[47:32]+8;
+  也就是KERNEL_SS段描述符在GDT中在KERNEL_CS段描述符的后面且相邻。
 
-### 关于 STAR MSR的值如何确定：
-
-<https://wiki.osdev.org/SYSENTER> 中写道：
-
-> In Long Mode, userland CS will be loaded from STAR 63:48 + 16 and userland SS from STAR 63:48 + 8 on SYSRET. You may need to modify your GDT accordingly.
-
-与Intel sdm中sysret指令的说明相符，
-```
-IF (operand size is 64-bit)
-  THEN CS.Selector ← IA32_STAR[63:48]+16;
-  ELSE CS.Selector ← IA32_STAR[63:48];
-FI;
-...
-SS.Selector ← (IA32_STAR[63:48]+8) OR 3;
-```
-所以，在long mode下，GDT中需要USER_SS在USER_CS之前且相邻。写入到`STAR 63:48`的地址是USER_SS上一条entry的偏移，即`offset(USER_SS)-8`
+### sysret
+64bit模式下：
+* 从R11恢复RFLAGS，RCXu恢复RIP
+* 从上图MSR的对应位置获取目标CS和SS段选择子，其中
+  CS_selector=IA32_STAR[63:48]+16; SS_selector=IA32_STAR[63:48]+8;
+  所以，GDT中需要USER_SS 段描述符在USER_CS 段描述符之前且相邻。写入到`STAR 63:48`的地址是USER_SS上一个描述符的偏移，即`offset(USER_SS)-8`
 
 > <https://blog.llandsmeer.com/tech/2019/07/21/uefi-x64-userland.html> 这个blog中设置的STAR MSR中segement selector应该是有问题的。
+
+### stack switching
+syscall/sysret会进行特权级切换，但是不会自动进行栈切换。所以需要操作系统或用户程序主动进行栈切换。这可能带来竞争：
+当操作系统执行sysret前恢复了用户栈，在执行sysret前（或执行syscall，但切换内核栈前），有可能发生中断。这时还处于特权级0，不会因为特权级变化触发中断处理中的栈切换。
+操作系统需要避免这种情况发生。
+1. 通过清除EFLAGS.IF来关闭外部中断
+2. 关闭中断后，NMI中断和GP异常还有可能发生(sysret本身会产生GP异常)：可以在IDT的相应中断向量中，给这两个中断处理使用独立的栈(通过TSS的IST机制)。
 
 ### 相关权限
 1. 为了在user space下依然可以直接使用串口输出，在sysret切换用户空间是配置了eflags的`IOPL=3`
 2. 页表项目前都设置了`U/S`位，用户空间代码可以访问所有内存。
 
 ## 总结
-到目前为止，kernel已经自己来管理内存（包括内核栈，用户栈，页表，GDT等），过渡的memblock分配器也为后续正式的内存分配器的构建提供了可能。只是kernel本身的加载地址依然是UEFI最初的加载地址，为此我们专门在页表中添加了对应区域的identity mapping。
+到目前为止，kernel已经自己来管理内存（包括内核栈，用户栈，页表，GDT等），过渡的memblock分配器也为后续正式的内存分配器的构建提供了可能。
+只是kernel本身的加载地址依然是UEFI最初的加载地址，为此我们专门在页表中添加了对应区域的identity mapping。
 
 ## 附：使用qemu + GDB 调试UEFI程序
 ### Qemu + GDB远程调试
