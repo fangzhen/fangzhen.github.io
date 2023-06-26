@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Linux 中系统调用实现
+title: Linux 中系统调用实现(x86_64)
 tags: kernel glibc
 date: 2020-08-30
 update: 2021-08-30
@@ -846,7 +846,6 @@ alternative 宏可参考：https://blog.csdn.net/choumin/article/details/1151088
 ------
 
 * syscall 实现：
-
   - <https://blog.packagecloud.io/eng/2016/04/05/the-definitive-guide-to-linux-system-calls/>
   - <https://www.binss.me/blog/the-analysis-of-linux-system-call/>
      这两篇写syscall比较清晰详尽，也包含了一些背景。涵盖了x86 32位和64位下使用中断，`syscall`，`sysenter`等的不同实现。
@@ -859,15 +858,12 @@ alternative 宏可参考：https://blog.csdn.net/choumin/article/details/1151088
   - <https://stackoverflow.com/questions/19938324/what-are-vdso-and-vsyscall>
   - <http://man7.org/linux/man-pages/man7/vdso.7.html>
 
-
-
 * calling convention
   - <https://blog.csdn.net/qq_29328443/article/details/107232025>
   - <https://refspecs.linuxfoundation.org/elf/x86_64-abi-0.99.pdf>
   - <https://stackoverflow.com/questions/18133812/where-is-the-x86-64-system-v-abi-documented>
   - <https://stackoverflow.com/questions/2535989/what-are-the-calling-conventions-for-unix-linux-system-calls-and-user-space-f>
   - [linux/arch/x86/entry/calling.h](https://github.com/torvalds/linux/blob/master/arch/x86/entry/calling.h)
-
 
 * KPTI
   - <https://www.kernel.org/doc/Documentation/x86/pti.txt>
