@@ -2,6 +2,8 @@ memblock
 [A quick history of early-boot memory allocators](https://lwn.net/Articles/761215/)
 https://www.kernel.org/doc/html/v4.19/core-api/boot-time-mm.html
 
+内存系列 pagecache 零拷贝等，比较详细 https://plantegg.github.io/2020/01/15/Linux%20%E5%86%85%E5%AD%98%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/
+
 memory in general
 [Understanding The Linux Virtual Memory Manager by Mel Gorman]https://www.kernel.org/doc/gorman/pdf/understand.pdf
 https://richardweiyang-2.gitbook.io/kernel-exploring/00-memory_a_bottom_up_view
