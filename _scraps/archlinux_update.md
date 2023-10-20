@@ -96,7 +96,7 @@ Jul 12 00:14:11 archlinux systemd[1]: Starting Hostname Service...
 Jul 12 00:14:11 archlinux dbus-daemon[369]: [system] Successfully activated service 'org.freedesktop.hostname1'
 ```
 
-也就是连vpn之后，NetworkManger把hostname改掉了。Xorg的xauth是有主机名信息的。
+也就是连vpn之后，NetworkManger把hostname改掉了。Xorg认证有host和key两种方式（分别对应xhost和xauth命令）。hostname修改会造成X的认证有问题。
 
 ```
 $ xauth list

@@ -24,8 +24,9 @@ Unstable Feature 分为三类：
 2. language features:
 
    这些是编译器feature，通过`#![feature]`指定。
-   feature的列表在源码的[`src/rustc_feature/`](https://doc.rust-lang.org/nightly/nightly-rustc/src/rustc_feature/)下，
-   `accepted.rs`是已经stable的feature列表，`active.rs`是unstable的feature列表。
+   feature的列表在源码的`src/rustc_feature/`下，
+   [`accepted.rs`](https://doc.rust-lang.org/nightly/nightly-rustc/src/rustc_feature/accepted.rs.html)是已经stable的feature列表，
+   [`active.rs`](https://doc.rust-lang.org/nightly/nightly-rustc/src/rustc_feature/active.rs.html)是unstable的feature列表。
    随着rust的开发，有些feature会从unstable变成stable，参考<https://rustc-dev-guide.rust-lang.org/stabilization_guide.html>
 
 3. library features:

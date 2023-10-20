@@ -93,13 +93,13 @@ main = let Act s = mymain
 
 这个示例是对haskell中`IO`的简化实现，并演示以`mymain`作为程序入口，以`MyIO`封装函数副作用的使用。下面表格说明了示例中的实现与haskell中实现/概念的对应关系。
 
-| 示例中的实现 | haskell 对应 | 说明|
-| `MyMonad` | `Monad` | monad type class定义 |
-| `MyIO` | `IO` | 封装 `RealWorld`的使用 |
-| `msleep` | `getchar`等 | 任意返回`MyIO`类型的函数 |
-| `mymain` | `main` | 使用`MyIO`的程序入口 |
-| `countdown` | 无 | 模拟有副作用的函数（此处为时间消耗），没有haskell的实现对应。|
-| `main` | 无 | 模拟编译器对main的执行，没有haskell的实现对应。 可以理解为编译器编译时调用`main`的处理逻辑|
+| 示例中的实现 | haskell 对应 | 说明                                                                                       |
+| `MyMonad`    | `Monad`      | monad type class定义                                                                       |
+| `MyIO`       | `IO`         | 封装 `RealWorld`的使用                                                                     |
+| `msleep`     | `getchar`等  | 任意返回`MyIO`类型的函数                                                                   |
+| `mymain`     | `main`       | 使用`MyIO`的程序入口                                                                       |
+| `countdown`  | 无           | 模拟有副作用的函数（此处为时间消耗），没有haskell的实现对应。                              |
+| `main`       | 无           | 模拟编译器对main的执行，没有haskell的实现对应。 可以理解为编译器编译时调用`main`的处理逻辑 |
 
 > Note: `countdown`和`main`在本示例中用来模拟haskell语言之外的行为。
 
