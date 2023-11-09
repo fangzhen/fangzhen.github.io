@@ -120,7 +120,7 @@ cat: write error: Resource temporarily unavailable
 54 }
 ```
 
-1. 在`ssh_session2_open`中dup了`stdin/stdout/stderr`，并且调用了`set_nonblock`（line 24）。
+1. 在`ssh_session2_open`中dup了`stdin/stdout/stderr`，并且调用了`set_nonblock`（line 24）。可以看到这里判断了**非tty**的时候才会设置为nonblock。
 2. 在上面代码片段33行的地方，把`stdout`设置成了`devnull`
 3. `client_loop`最后通过`unset_nonblock`试图恢复`O_NONBLOCK` flag（line 50）。
 
