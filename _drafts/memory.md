@@ -8,6 +8,11 @@ https://richardweiyang-2.gitbook.io/kernel-exploring/00-memory_a_bottom_up_view
 [Linux核心概念详解]https://s3.shizhz.me memory部分
 https://0xax.gitbooks.io/linux-insides/content/MM/
 
+http://notemagnet.blogspot.com/2008/08/linux-write-cache-mystery.html
+https://stackoverflow.com/questions/52067753/how-to-keep-executable-code-in-memory-even-under-memory-pressure-in-linux
+https://askubuntu.com/questions/432809/why-is-kswapd0-running-on-a-computer-with-no-swap/432827#432827
+https://zhuanlan.zhihu.com/p/95813254
+
 slab
 https://easystack.atlassian.net/browse/EAS-88771
 SLUB: 整体比较清晰 https://www.cnblogs.com/tolimit/p/4654109.html

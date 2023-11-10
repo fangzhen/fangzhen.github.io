@@ -64,16 +64,6 @@ https://developers.google.com/web/fundamentals/performance/http2?hl=zh-cn
 
 https://blog.gingerlime.com/2011/django-memory-leaks-part-i/
 
-cpu load iowait etc.
-https://eklitzke.org/uninterruptible-sleep
-http://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html
-https://blog.pregos.info/wp-content/uploads/2010/09/iowait.txt
-http://notemagnet.blogspot.com/2008/08/linux-write-cache-mystery.html
-https://stackoverflow.com/questions/52067753/how-to-keep-executable-code-in-memory-even-under-memory-pressure-in-linux
-https://askubuntu.com/questions/432809/why-is-kswapd0-running-on-a-computer-with-no-swap/432827#432827
-https://zhuanlan.zhihu.com/p/95813254
-
-
 
 EAS-57616
 
