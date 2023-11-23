@@ -1,0 +1,340 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 红黑树的插入删除
+tags: ["red-balck tree"]
+date: 2023-11-21
+update: 2023-12-16
+---
+#+END_EXPORT
+
+#+OPTIONS: toc:nil
+
+** 红黑树定义和基本操作
+ 红黑树是一种二叉查找树，满足如下性质：
+ - 性质1：每个节点要么是黑色，要么是红色。
+ - 性质2：根节点是黑色。
+ - 性质3：每个叶子节点（NIL）是黑色。
+ - 性质4：每个红色节点的两个子节点一定都是黑色。
+ - 性质5：任意一节点到每个叶子节点的路径都包含数量相同的黑节点。
+
+#+BEGIN_NOTE
+树中没有键相等的元素。
+#+END_NOTE
+
+*** 自平衡操作
+红黑树在插入和删除节点后可能不满足以上性质，这种情况下需要通过一些操作(及其组合)达到自平衡：
+- 变色：即改变节点的颜色。
+- 旋转：旋转分为右旋和左旋，两者是对称的，如[[fig:rotate][下图]]。
+
+#+NAME: ref:rotate
+#+BEGIN_SRC dot :file ../assets/static/generated/rbtree/rotate.png :exports results
+  digraph rbtree {
+      newrank=true; compound=true; ranksep=0.2; node[shape=circle]; ordering=out; splines=false;
+      {i0 [style=invis]} -> "d " -> "b " -> "a "; "b " -> "c "; "d " -> "e ";
+      {i1 [style=invis]} -> b -> a; b-> d -> c; d -> e;
+
+      subgraph c0 {cluster=true; style=invis; "e "}
+      subgraph c1 {cluster=true; style=invis; a}
+      {"e ":ne -> a:nw[ltail=c0 lhead=c1 label="右旋" minlen=2]; rank=same};
+      {a:se -> "e ":se[ltail=c1 lhead=c0 label="左旋"];};
+  }
+#+END_SRC
+#+NAME: fig:rotate
+#+CAPTION: 二叉树旋转
+#+RESULTS: ref:rotate
+
+可以看到旋转有如下性质：
+- 旋转前后仍是二叉查找树，节点顺序不变，都是abcde。
+- 父子关系与高度：
+  - 只有bcd的父子指针发生变化；
+  - ace可以代表它们的子树，ae及其子树高度有变化；但是通过变色，可以调整ace的黑高度。
+
+** 插入和删除调整概述
+#+BEGIN_NOTE
+本部分可以先简略看一下，结合后面插入删除的细节来理解。
+#+END_NOTE
+
+*** 调整策略：
+插入或删除后可能导致红黑树性质不满足，就需要进行调整以恢复红黑树的性质。为了简化，我们保证调整前后一直满足性质3和5。
+1. 尽量在一个旋转单元内部进行调整。
+2. 否则，尝试在更大的操作单元完成调整；
+3. 否则，寻找同构的结构，把操作单元上移，从而递归处理。
+
+*** 如何调整：
+*我们最终目的是恢复红黑树的性质，调整结构和染色是手段。旋转是调整结构的一种方式。*
+
+1. 在非递归的情况下，调整后要能满足红黑树的全部性质。具体来说， *操作单元的叶子节点的黑高度和调整前相同，而且叶子节点的颜色不能黑变红(否则可能造成双红)。*
+2. 在递归的情况下，新的操作单元要满足调整前的约束(满足性质3和5)。
+
+**** 使用更大的调整单元：
+更大的调整单元意味着更多的节点和更复杂的结构，这使得颜色调整的空间也可以更大。但是单个调整单元要考虑的情况也复杂的多。
+实际的插入和删除算法中，除了上面的旋转单元，只用到了下面这种调整单元(实际上相当于两次旋转)。
+
+如果考虑满二叉树中三个连续节点(如bcd)的结构，除了上图中的两种情况，还有另一种(下图中间)。这种情况下叶子节点是afge。
+
+#+NAME: ref:rotate2
+#+BEGIN_SRC dot :file ../assets/static/generated/rbtree/rotate-2.png :exports results
+  digraph rbtree {
+      newrank=true; compound=true; ranksep=0.2; node[shape=circle]; ordering=out;
+      {i0 [style=invis]} -> "d " -> "b " -> "a "; "b " -> "c "; "d " -> "e "; "c " -> "f "; "c " -> "g ";
+
+      {i1 [style=invis]} -> " c" -> " b"-> " a"; " c" -> " d"-> " g"; " b"-> " f"; " d"-> " e";
+
+      {i2 [style=invis]} -> b -> a; b-> d; d -> c; d -> e; c -> f ; c -> g;
+
+      subgraph c0 {cluster=true; style=invis; "e "}
+      subgraph c1 {cluster=true; style=invis; " b"; " d"}
+      subgraph c2 {cluster=true; style=invis; a}
+      {"e " -> " b"[ltail=c0 lhead=c1 minlen=4 label="b左旋后d右旋"]; rank=same};
+      {a -> " d"[ltail=c2 lhead=c1 minlen=4 label="d右旋后b左旋"]; rank=same};
+  }
+#+END_SRC
+#+NAME: fig:rotate2
+#+CAPTION: 三个连续节点的结构变化
+#+RESULTS: ref:rotate2
+
+** 查找
+查找操作跟普通二叉查找树没有区别。
+
+** 插入
+插入的过程为先通过查找找到要插入的位置，把新插入的节点作为当前节点，然后考虑如下情况：
+
+1. 不需要平衡的情况
+   - 当前节点为根节点(有可能原树是空树，也有可能是2.1)
+   - key已存在，直接替换
+   - 插入节点的父节点为黑节点，直接插入，当前节点涂红
+2. 父节点为红色，且为祖父节点的左孩子，祖父肯定存在且为黑色。先把当前节点涂红，这样 *把需要平衡的情况都归结为双红节点 (不满足性质4)。*
+   插入导致节点增多，平衡时应该让当前节点的路径变短，所以我们找旋转单元时， *让当前节点位于旋转单元的长边。*
+    *考虑叔叔节点的颜色*
+   1. 叔叔为红色(当前节点为a或c类似)：这种情况下，无法达成策略1，部分情况可以达成策略2，但考虑的情况太多；因此选择策略3，让根节点变为红色并递归处理。
+      其他节点的颜色如图所示，这样a c e的黑高度在修改前后都是121。
+      如果递归后还落在这种情况，最坏时间复杂度为 O(log(n))
+   2. 叔叔为黑色：当前节点a： 这种情况下，如图可以达成策略1，ace的黑高度旋转前后都是122。
+   3. 叔叔为黑色：当前节点c：
+      - 这种情况下，无法达成策略1：如图ace的黑高度旋转前后都是212，但是还是有双红节点。
+      - 达成策略2：先转换为2.2，需要两次旋转。实际的执行过程如图所示，afge前后的黑高度都是2222。
+3. 与上一种情况对称，父节点为祖父节点的右孩子的情况，不再赘述。
+
+以上插入各情况如图：
+#+NAME: ref:insert1
+#+BEGIN_SRC dot :file ../assets/static/generated/rbtree/insert-1.png :exports results
+  digraph rbtree {
+      newrank=true; compound=true; ranksep=0.2; node[shape=circle]; ordering=out;
+      {node[color=red]; "b "; "e "; "a "; d; a}
+
+      {i0 [style=invis]} -> "d " -> "b " -> "a "; "b " -> "c "; "d " -> "e ";
+      {i1 [style=invis]} -> d -> b -> a; b -> c; d -> e;
+
+      subgraph c0 {cluster=true; style=invis; "e "}
+      subgraph c1 {cluster=true; style=invis; b}
+      {"e " -> b[ltail=c0 lhead=c1 label="    不旋转      "]; rank=same};
+  }
+#+END_SRC
+#+NAME: fig:insert1
+#+CAPTION: 插入2.1：递归处理
+#+RESULTS: ref:insert1
+
+#+NAME: ref:insert2
+#+BEGIN_SRC dot :file ../assets/static/generated/rbtree/insert-2.png :exports results
+  digraph rbtree {
+      newrank=true; compound=true; ranksep=0.2; node[shape=circle]; ordering=out;
+      {node[color=red]; "b "; "a "; a; d}
+
+      {i0 [style=invis]} -> "d " -> "b " -> "a "; "b " -> "c "; "d " -> "e ";
+      {i1 [style=invis]} -> b -> a; b -> d; d -> c; d -> e;
+
+      subgraph c0 {cluster=true; style=invis; "e "}
+      subgraph c1 {cluster=true; style=invis; a}
+      {"e " -> a[ltail=c0 lhead=c1 label="    右旋      "]; rank=same};
+  }
+#+END_SRC
+#+NAME: fig:insert2
+#+CAPTION: 插入2.2：策略1, 右旋即可
+#+RESULTS: ref:insert2
+
+#+NAME: ref:insert3
+#+BEGIN_SRC dot :file ../assets/static/generated/rbtree/insert-3.png :exports results
+  digraph rbtree {
+      newrank=true; compound=true; ranksep=0.2; node[shape=circle]; ordering=out;
+      {node[color=red]; "b "; "c "; }
+      {i0 [style=invis]} -> "d " -> "b " -> "a "; "b " -> "c "; "d " -> "e ";
+
+      a; {node[color=red]; c; d}
+      {i1 [style=invis]} -> b -> a; b -> d; d -> c; d -> e;
+
+      subgraph c0 {cluster=true; style=invis; "e "}
+      subgraph c1 {cluster=true; style=invis; a}
+      {"e " -> a[ltail=c0 lhead=c1 label="    右旋      "]; rank=same};
+  }
+#+END_SRC
+#+NAME: fig:insert3
+#+CAPTION: 插入2.3：策略1 无法达成
+#+RESULTS: ref:insert3
+
+#+NAME: ref:insert4
+#+BEGIN_SRC dot :file ../assets/static/generated/rbtree/insert-4.png :exports results
+  digraph rbtree {
+      newrank=true; compound=true; ranksep=0.2; node[shape=circle]; ordering=out;
+      {node[color=red]; "b "; "c "; }
+      {i0 [style=invis]} -> "d " -> "b " -> "a "; "b " -> "c "; "d " -> "e "; "c " -> "f "; "c " -> "g ";
+
+      {node[color=red]; b; c; }
+      {i1 [style=invis]} -> d -> c -> b -> a; b -> f; c -> g; d->e;
+
+      {node[color=red]; " b"; " d"}
+      {i2 [style=invis]} -> " c" -> " b"-> " a"; " c" -> " d"-> " g"; " b"-> " f"; " d"-> " e";
+
+      subgraph c0 {cluster=true; style=invis; "e "}
+      subgraph c1 {cluster=true; style=invis; c}
+      subgraph c2 {cluster=true; style=invis; " b"}
+      {"e " -> c[ltail=c0 lhead=c1 label="    b左旋      "]; rank=same};
+      {e -> " b"[ltail=c0 lhead=c1 label="    d右旋      "]; rank=same};
+  }
+#+END_SRC
+#+NAME: fig:insert4
+#+CAPTION: 插入2.3：两次旋转达成策略2
+#+RESULTS: ref:insert4
+
+** 删除
+*** 二叉查找树的删除
+二叉查找树的删除需要先通过查找找到要删除的节点，要删除的节点(当前节点)分为三种情况：
+1. 叶子节点，直接删除
+2. 只有一个子节点，直接把子树上移
+3. 两个子节点，当前节点的值替换为后继节点，然后递归删除后继节点。最终会转为情况1或2
+#+BEGIN_NOTE
+上面情况3中的后继节点改为前继节点是一样的。
+#+END_NOTE
+
+*** 红黑树调整前处理
+红黑树按照上述二叉查找树的算法删除节点后，可能会造成红黑树性质不满足，需要调整。
+
+我们把情况1归为情况2的特殊情况, 认为叶子节点有一个左子节点，且为黑色。
+所以只需要考虑情况2，用v代表要删除的节点，e代表v唯一的子节点。
+#+BEGIN_SRC
+  v
+ /
+e
+#+END_SRC
+
+*删除v后为了保证性质5(黑高度不变)，我们把v的颜色加到e上，即现在e有两个颜色(红+黑/黑+黑)。*
+
+#+BEGIN_NOTE
+注意因为涵盖了情况1，所以e可能是NIL节点。在实现中，对于e，我们只需要处理它的颜色，需要区分处理它是否为NIL的情况。
+#+END_NOTE
+
+*** 调整
+下文中u和v从该状态继续处理(v已被删除，e位于v原来的位置，双颜色)。
+
+**** 不需要调整的情况
+1. e的颜色是红+黑，直接把颜色改成黑即可。
+2. e的颜色是黑+黑，但它是根节点。直接把颜色设为黑。
+
+**** 需要调整的情况
+本节只列举e为右孩子的情况，e为左孩子的情况与之对称，不再赘述。
+
+*需要平衡的情况都归结为双重黑节点，这时候如果直接去掉一重黑色，导致黑高度不相等。*
+删除导致节点减少，平衡时应该让当前节点的路径变长，所以我们找操作单元时， *让节点e位于操作单元的短边。*
+然后通过旋转操作让e的路径变长，以达到让多的一重黑色转移到其他节点上的目的。 *需要考虑e的兄弟节点和侄子节点*
+1. 兄弟节点黑色；侄子节点有红色：
+    1. 兄弟节点左孩子红色，右孩子任意：右旋后重新染色可达成策略1。
+    2. 兄弟节点左孩子黑色，右孩子红色：策略1无法达成，扩大调整单元达成策略2。
+2. 兄弟节点，侄子节点都是黑色。策略1无法达成；策略2在某些子情况下可达成，但比较复杂，也不一定能达成；
+   使用策略3，把当前节点和兄弟节点的黑色上移到父节点。这种情况下如果递归到根节点，黑高度会减少。
+3. 兄弟节点为红色：策略1无法达成；策略2情况复杂；策略3旋转着色后变成1或2，继续递归处理。
+   - 这种情况下策略3其实不会一直递归下去。如果转化为情况1，有限步数；如果转化为情况2，因为d是红色，也不会一直递归。
+     这与直观感觉是符合的————兄弟节点有红色，应该可以通过局部调整达到把双黑的额外一重黑色匀出去。
+     *这个策略3本质上还是策略2*
+
+
+下面图中橙色表示节点颜色任意。
+#+NAME: ref:delete1
+#+BEGIN_SRC dot :file ../assets/static/generated/rbtree/delete-1.png :exports results
+  digraph rbtree {
+      newrank=true; compound=true; ranksep=0.2; node[shape=circle]; ordering=out;
+      {node[color=red]; "a "; } {node[color=orange]; "d ";"c "; }
+      {i0 [style=invis]} -> "d " -> "b " -> "a "; "b " -> "c "; "d " -> "e ";
+      "e "[shape=doublecircle];
+
+      a; {node[color=orange]; b; c; }
+      {i1 [style=invis]} -> b -> a; b -> d; d -> c; d -> e;
+
+      subgraph c0 {cluster=true; style=invis; "e "}
+      subgraph c1 {cluster=true; style=invis; a}
+      {"e " -> a[ltail=c0 lhead=c1 label="    右旋      "]; rank=same};
+  }
+#+END_SRC
+#+NAME: fig:delete1
+#+CAPTION: 删除1.1：右旋达成策略1
+#+RESULTS: ref:delete1
+
+#+NAME: ref:delete2
+#+BEGIN_SRC dot :file ../assets/static/generated/rbtree/delete-2.png :exports results
+  digraph rbtree {
+      newrank=true; compound=true; ranksep=0.2; node[shape=circle]; ordering=out;
+      "b "; {node[color=red];  "c "; } {node[shape=doublecircle];  "e "; }
+      {i0 [style=invis]} -> "d " -> "b " -> "a "; "b " -> "c "; "d " -> "e "; "c " -> "f "; "c " -> "g ";
+
+      //{node[color=red];  c; }
+      {i1 [style=invis]} -> d -> c -> b -> a; b -> f; c -> g; d->e;
+
+      //{node[color=red]; " b"; " d"}
+      {i2 [style=invis]} -> " c" -> " b"-> " a"; " c" -> " d"-> " g"; " b"-> " f"; " d"-> " e";
+
+      subgraph c0 {cluster=true; style=invis; "e "}
+      subgraph c1 {cluster=true; style=invis; c}
+      subgraph c2 {cluster=true; style=invis; " b"}
+      {"e " -> c[ltail=c0 lhead=c1 label="    b左旋      "]; rank=same};
+      {e -> " b"[ltail=c0 lhead=c1 label="    d右旋      "]; rank=same};
+  }
+#+END_SRC
+#+NAME: fig:delete2
+#+CAPTION: 删除1.2：旋转两次达成策略2
+#+RESULTS: ref:delete2
+
+#+NAME: ref:delete3
+#+BEGIN_SRC dot :file ../assets/static/generated/rbtree/delete-3.png :exports results
+  digraph rbtree {
+      newrank=true; compound=true; ranksep=0.2; node[shape=circle]; ordering=out;
+      {node[color=orange]; "d "; }
+      {i0 [style=invis]} -> "d " -> "b " -> "a "; "b " -> "c "; "d " -> "e ";
+      "e "[shape=doublecircle];
+
+      {node[color=red]; b; }
+      {i1 [style=invis]} -> d -> b -> a; b -> c; d -> e;
+      d[shape=doublecircle,color=orange];
+
+      subgraph c0 {cluster=true; style=invis; "e "}
+      subgraph c1 {cluster=true; style=invis; b}
+      {"e " -> b[ltail=c0 lhead=c1 label="     无旋转     "]; rank=same};
+  }
+#+END_SRC
+#+NAME: fig:delete3
+#+CAPTION: 删除2：递归处理
+#+RESULTS: ref:delete3
+
+#+NAME: ref:delete4
+#+BEGIN_SRC dot :file ../assets/static/generated/rbtree/delete-4.png :exports results
+  digraph rbtree {
+      newrank=true; compound=true; ranksep=0.2; node[shape=circle]; ordering=out;
+      {node[color=red]; "b "; }
+      {i0 [style=invis]} -> "d " -> "b " -> "a "; "b " -> "c "; "d " -> "e ";
+      "e "[shape=doublecircle];
+
+      a; {node[color=red]; d; }
+      {i1 [style=invis]} -> b -> a; b -> d; d -> c; d -> e;
+      e[shape=doublecircle];
+
+      subgraph c0 {cluster=true; style=invis; "e "}
+      subgraph c1 {cluster=true; style=invis; a}
+      {"e " -> a[ltail=c0 lhead=c1 label="    右旋      "]; rank=same};
+  }
+#+END_SRC
+#+NAME: fig:delete4
+#+CAPTION: 删除3：递归处理，但是只会递归常数次，相当与策略2
+#+RESULTS: ref:delete4
+
+** References
+- https://zhuanlan.zhihu.com/p/93369069 红黑树和AVL树的比较，包括时间/空间复杂度分析
+- https://www.jianshu.com/p/e136ec79235c 插入
+- https://zhuanlan.zhihu.com/p/145006031 删除

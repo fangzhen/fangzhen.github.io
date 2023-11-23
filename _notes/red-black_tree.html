@@ -1,0 +1,343 @@
+---
+layout: post
+title: 红黑树的插入删除
+tags: ["red-balck tree"]
+date: 2023-11-21
+update: 2023-12-16
+---
+
+<div id="outline-container-org5100c22" class="outline-2">
+<h2 id="org5100c22"><span class="section-number-2">1.</span> 红黑树定义和基本操作</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+红黑树是一种二叉查找树，满足如下性质：
+</p>
+<ul class="org-ul">
+<li>性质1：每个节点要么是黑色，要么是红色。</li>
+<li>性质2：根节点是黑色。</li>
+<li>性质3：每个叶子节点（NIL）是黑色。</li>
+<li>性质4：每个红色节点的两个子节点一定都是黑色。</li>
+<li>性质5：任意一节点到每个叶子节点的路径都包含数量相同的黑节点。</li>
+</ul>
+
+<div class="NOTE">
+<p>
+树中没有键相等的元素。
+</p>
+
+</div>
+</div>
+
+<div id="outline-container-org3447920" class="outline-3">
+<h3 id="org3447920"><span class="section-number-3">1.1.</span> 自平衡操作</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+红黑树在插入和删除节点后可能不满足以上性质，这种情况下需要通过一些操作(及其组合)达到自平衡：
+</p>
+<ul class="org-ul">
+<li>变色：即改变节点的颜色。</li>
+<li>旋转：旋转分为右旋和左旋，两者是对称的，如<a href="#fig:rotate">下图</a>。</li>
+</ul>
+
+
+<div id="fig:rotate" class="figure">
+<p><img src="../assets/static/generated/rbtree/rotate.png" alt="rotate.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>二叉树旋转</p>
+</div>
+
+<p>
+可以看到旋转有如下性质：
+</p>
+<ul class="org-ul">
+<li>旋转前后仍是二叉查找树，节点顺序不变，都是abcde。</li>
+<li>父子关系与高度：
+<ul class="org-ul">
+<li>只有bcd的父子指针发生变化；</li>
+<li>ace可以代表它们的子树，ae及其子树高度有变化；但是通过变色，可以调整ace的黑高度。</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc3a7a5f" class="outline-2">
+<h2 id="orgc3a7a5f"><span class="section-number-2">2.</span> 插入和删除调整概述</h2>
+<div class="outline-text-2" id="text-2">
+<div class="NOTE">
+<p>
+本部分可以先简略看一下，结合后面插入删除的细节来理解。
+</p>
+
+</div>
+</div>
+
+<div id="outline-container-org70e1573" class="outline-3">
+<h3 id="org70e1573"><span class="section-number-3">2.1.</span> 调整策略：</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+插入或删除后可能导致红黑树性质不满足，就需要进行调整以恢复红黑树的性质。为了简化，我们保证调整前后一直满足性质3和5。
+</p>
+<ol class="org-ol">
+<li>尽量在一个旋转单元内部进行调整。</li>
+<li>否则，尝试在更大的操作单元完成调整；</li>
+<li>否则，寻找同构的结构，把操作单元上移，从而递归处理。</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org924ecb1" class="outline-3">
+<h3 id="org924ecb1"><span class="section-number-3">2.2.</span> 如何调整：</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+<b>我们最终目的是恢复红黑树的性质，调整结构和染色是手段。旋转是调整结构的一种方式。</b>
+</p>
+
+<ol class="org-ol">
+<li>在非递归的情况下，调整后要能满足红黑树的全部性质。具体来说， <b>操作单元的叶子节点的黑高度和调整前相同，而且叶子节点的颜色不能黑变红(否则可能造成双红)。</b></li>
+<li>在递归的情况下，新的操作单元要满足调整前的约束(满足性质3和5)。</li>
+</ol>
+</div>
+
+<div id="outline-container-org530e753" class="outline-4">
+<h4 id="org530e753"><span class="section-number-4">2.2.1.</span> 使用更大的调整单元：</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+更大的调整单元意味着更多的节点和更复杂的结构，这使得颜色调整的空间也可以更大。但是单个调整单元要考虑的情况也复杂的多。
+实际的插入和删除算法中，除了上面的旋转单元，只用到了下面这种调整单元(实际上相当于两次旋转)。
+</p>
+
+<p>
+如果考虑满二叉树中三个连续节点(如bcd)的结构，除了上图中的两种情况，还有另一种(下图中间)。这种情况下叶子节点是afge。
+</p>
+
+
+<div id="fig:rotate2" class="figure">
+<p><img src="../assets/static/generated/rbtree/rotate-2.png" alt="rotate-2.png" />
+</p>
+<p><span class="figure-number">Figure 2: </span>三个连续节点的结构变化</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org09bb39b" class="outline-2">
+<h2 id="org09bb39b"><span class="section-number-2">3.</span> 查找</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+查找操作跟普通二叉查找树没有区别。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7807736" class="outline-2">
+<h2 id="org7807736"><span class="section-number-2">4.</span> 插入</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+插入的过程为先通过查找找到要插入的位置，把新插入的节点作为当前节点，然后考虑如下情况：
+</p>
+
+<ol class="org-ol">
+<li>不需要平衡的情况
+<ul class="org-ul">
+<li>当前节点为根节点(有可能原树是空树，也有可能是2.1)</li>
+<li>key已存在，直接替换</li>
+<li>插入节点的父节点为黑节点，直接插入，当前节点涂红</li>
+</ul></li>
+<li>父节点为红色，且为祖父节点的左孩子，祖父肯定存在且为黑色。先把当前节点涂红，这样 <b>把需要平衡的情况都归结为双红节点 (不满足性质4)。</b>
+插入导致节点增多，平衡时应该让当前节点的路径变短，所以我们找旋转单元时， <b>让当前节点位于旋转单元的长边。</b>
+ <b>考虑叔叔节点的颜色</b>
+<ol class="org-ol">
+<li>叔叔为红色(当前节点为a或c类似)：这种情况下，无法达成策略1，部分情况可以达成策略2，但考虑的情况太多；因此选择策略3，让根节点变为红色并递归处理。
+其他节点的颜色如图所示，这样a c e的黑高度在修改前后都是121。
+如果递归后还落在这种情况，最坏时间复杂度为 O(log(n))</li>
+<li>叔叔为黑色：当前节点a： 这种情况下，如图可以达成策略1，ace的黑高度旋转前后都是122。</li>
+<li>叔叔为黑色：当前节点c：
+<ul class="org-ul">
+<li>这种情况下，无法达成策略1：如图ace的黑高度旋转前后都是212，但是还是有双红节点。</li>
+<li>达成策略2：先转换为2.2，需要两次旋转。实际的执行过程如图所示，afge前后的黑高度都是2222。</li>
+</ul></li>
+</ol></li>
+<li>与上一种情况对称，父节点为祖父节点的右孩子的情况，不再赘述。</li>
+</ol>
+
+<p>
+以上插入各情况如图：
+</p>
+
+<div id="fig:insert1" class="figure">
+<p><img src="../assets/static/generated/rbtree/insert-1.png" alt="insert-1.png" />
+</p>
+<p><span class="figure-number">Figure 3: </span>插入2.1：递归处理</p>
+</div>
+
+
+<div id="fig:insert2" class="figure">
+<p><img src="../assets/static/generated/rbtree/insert-2.png" alt="insert-2.png" />
+</p>
+<p><span class="figure-number">Figure 4: </span>插入2.2：策略1, 右旋即可</p>
+</div>
+
+
+<div id="fig:insert3" class="figure">
+<p><img src="../assets/static/generated/rbtree/insert-3.png" alt="insert-3.png" />
+</p>
+<p><span class="figure-number">Figure 5: </span>插入2.3：策略1 无法达成</p>
+</div>
+
+
+<div id="fig:insert4" class="figure">
+<p><img src="../assets/static/generated/rbtree/insert-4.png" alt="insert-4.png" />
+</p>
+<p><span class="figure-number">Figure 6: </span>插入2.3：两次旋转达成策略2</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb47edab" class="outline-2">
+<h2 id="orgb47edab"><span class="section-number-2">5.</span> 删除</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-org346f7fd" class="outline-3">
+<h3 id="org346f7fd"><span class="section-number-3">5.1.</span> 二叉查找树的删除</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+二叉查找树的删除需要先通过查找找到要删除的节点，要删除的节点(当前节点)分为三种情况：
+</p>
+<ol class="org-ol">
+<li>叶子节点，直接删除</li>
+<li>只有一个子节点，直接把子树上移</li>
+<li>两个子节点，当前节点的值替换为后继节点，然后递归删除后继节点。最终会转为情况1或2</li>
+</ol>
+<div class="NOTE">
+<p>
+上面情况3中的后继节点改为前继节点是一样的。
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6d071df" class="outline-3">
+<h3 id="org6d071df"><span class="section-number-3">5.2.</span> 红黑树调整前处理</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+红黑树按照上述二叉查找树的算法删除节点后，可能会造成红黑树性质不满足，需要调整。
+</p>
+
+<p>
+我们把情况1归为情况2的特殊情况, 认为叶子节点有一个左子节点，且为黑色。
+所以只需要考虑情况2，用v代表要删除的节点，e代表v唯一的子节点。
+</p>
+<pre class="example">
+  v
+ /
+e
+</pre>
+
+<p>
+<b>删除v后为了保证性质5(黑高度不变)，我们把v的颜色加到e上，即现在e有两个颜色(红+黑/黑+黑)。</b>
+</p>
+
+<div class="NOTE">
+<p>
+注意因为涵盖了情况1，所以e可能是NIL节点。在实现中，对于e，我们只需要处理它的颜色，需要区分处理它是否为NIL的情况。
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd68a0ab" class="outline-3">
+<h3 id="orgd68a0ab"><span class="section-number-3">5.3.</span> 调整</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+下文中u和v从该状态继续处理(v已被删除，e位于v原来的位置，双颜色)。
+</p>
+</div>
+
+<div id="outline-container-org38738c3" class="outline-4">
+<h4 id="org38738c3"><span class="section-number-4">5.3.1.</span> 不需要调整的情况</h4>
+<div class="outline-text-4" id="text-5-3-1">
+<ol class="org-ol">
+<li>e的颜色是红+黑，直接把颜色改成黑即可。</li>
+<li>e的颜色是黑+黑，但它是根节点。直接把颜色设为黑。</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org8929cc5" class="outline-4">
+<h4 id="org8929cc5"><span class="section-number-4">5.3.2.</span> 需要调整的情况</h4>
+<div class="outline-text-4" id="text-5-3-2">
+<p>
+本节只列举e为右孩子的情况，e为左孩子的情况与之对称，不再赘述。
+</p>
+
+<p>
+<b>需要平衡的情况都归结为双重黑节点，这时候如果直接去掉一重黑色，导致黑高度不相等。</b>
+删除导致节点减少，平衡时应该让当前节点的路径变长，所以我们找操作单元时， <b>让节点e位于操作单元的短边。</b>
+然后通过旋转操作让e的路径变长，以达到让多的一重黑色转移到其他节点上的目的。 <b>需要考虑e的兄弟节点和侄子节点</b>
+</p>
+<ol class="org-ol">
+<li>兄弟节点黑色；侄子节点有红色：
+<ol class="org-ol">
+<li>兄弟节点左孩子红色，右孩子任意：右旋后重新染色可达成策略1。</li>
+<li>兄弟节点左孩子黑色，右孩子红色：策略1无法达成，扩大调整单元达成策略2。</li>
+</ol></li>
+<li>兄弟节点，侄子节点都是黑色。策略1无法达成；策略2在某些子情况下可达成，但比较复杂，也不一定能达成；
+使用策略3，把当前节点和兄弟节点的黑色上移到父节点。这种情况下如果递归到根节点，黑高度会减少。</li>
+<li>兄弟节点为红色：策略1无法达成；策略2情况复杂；策略3旋转着色后变成1或2，继续递归处理。
+<ul class="org-ul">
+<li>这种情况下策略3其实不会一直递归下去。如果转化为情况1，有限步数；如果转化为情况2，因为d是红色，也不会一直递归。
+这与直观感觉是符合的————兄弟节点有红色，应该可以通过局部调整达到把双黑的额外一重黑色匀出去。
+<b>这个策略3本质上还是策略2</b></li>
+</ul></li>
+</ol>
+
+
+<p>
+下面图中橙色表示节点颜色任意。
+</p>
+
+<div id="fig:delete1" class="figure">
+<p><img src="../assets/static/generated/rbtree/delete-1.png" alt="delete-1.png" />
+</p>
+<p><span class="figure-number">Figure 7: </span>删除1.1：右旋达成策略1</p>
+</div>
+
+
+<div id="fig:delete2" class="figure">
+<p><img src="../assets/static/generated/rbtree/delete-2.png" alt="delete-2.png" />
+</p>
+<p><span class="figure-number">Figure 8: </span>删除1.2：旋转两次达成策略2</p>
+</div>
+
+
+<div id="fig:delete3" class="figure">
+<p><img src="../assets/static/generated/rbtree/delete-3.png" alt="delete-3.png" />
+</p>
+<p><span class="figure-number">Figure 9: </span>删除2：递归处理</p>
+</div>
+
+
+<div id="fig:delete4" class="figure">
+<p><img src="../assets/static/generated/rbtree/delete-4.png" alt="delete-4.png" />
+</p>
+<p><span class="figure-number">Figure 10: </span>删除3：递归处理，但是只会递归常数次，相当与策略2</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgeac43a4" class="outline-2">
+<h2 id="orgeac43a4"><span class="section-number-2">6.</span> References</h2>
+<div class="outline-text-2" id="text-6">
+<ul class="org-ul">
+<li><a href="https://zhuanlan.zhihu.com/p/93369069">https://zhuanlan.zhihu.com/p/93369069</a> 红黑树和AVL树的比较，包括时间/空间复杂度分析</li>
+<li><a href="https://www.jianshu.com/p/e136ec79235c">https://www.jianshu.com/p/e136ec79235c</a> 插入</li>
+<li><a href="https://zhuanlan.zhihu.com/p/145006031">https://zhuanlan.zhihu.com/p/145006031</a> 删除</li>
+</ul>
+</div>
+</div>

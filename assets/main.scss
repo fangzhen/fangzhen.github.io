@@ -14,3 +14,11 @@ body {
             font-feature-settings: "none";
     font-kerning: none;
 }
+
+.note, .NOTE {
+    @extend blockquote;
+    font-style: normal;
+}
+
+// In org-mode, images are exported to HTML as a div of class figure
+.figure p {text-align: center;}

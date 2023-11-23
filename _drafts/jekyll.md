@@ -21,22 +21,6 @@ $ bundle install # gems及依赖 会安装到 .gem/ruby/3.0.0/gems/ 目录
 
 $ bundle exec jekyll serve
 ```
-
-## org-mode
-https://thackl.github.io/blogging-with-emacs-org-mode-and-jekyll
-
-https://orgmode.org/worg/org-tutorials/org-jekyll.html
-
-https://emacs.stackexchange.com/questions/19850/how-to-achieve-dynamic-projects-without-fixed-paths-for-publishing-from-org-mode
-
-关闭默认的toc, 否则front matter就不在第一行了
-#+OPTIONS: toc:nil
-#+TOC: headlines 2
-
-org mode里使用dot
-https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-dot.html
-
-
 ## theme / css
 org mode下
 begin_NAME end_NAME
@@ -50,24 +34,3 @@ begin_NAME end_NAME
 
 ## graphviz
 ordering=out https://stackoverflow.com/questions/9215803/graphviz-binary-tree-left-and-right-child
-
-
-## org-mode beamer
-org-mode导出pdf 中文：以下两个配置 https://emacs-china.org/t/topic/2540/12
-#+LATEX_HEADER: \usepackage{ctex}
-#+latex_compiler: xelatex
-
-
-中文字体指南https://zhuanlan.zhihu.com/p/538459335
-
-beamer默认字体是sans serif字体
-https://tex.stackexchange.com/questions/79420/changing-font-style-using-beamer
-\setsansfont{Liberation Serif}
-#+LATEX_HEADER: \setCJKsansfont{SimSun}
-
-
-https://emacs.stackexchange.com/questions/36837/org-mode-how-can-i-add-a-section-name-only-frame-to-beamer-slides
-
-image scale
-https://stackoverflow.com/questions/30138947/setting-width-or-height-for-graphics-in-beamer-only-works-with-png
-https://tex.stackexchange.com/questions/17380/best-figure-size-adjustment-when-dealing-with-different-image-sizes

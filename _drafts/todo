@@ -1,3 +1,8 @@
+*** blog
+    https://draveness.me
+    https://blog.csdn.net/armlinuxww/
+    https://blog.csdn.net/qq_41698827
+
 arp 缓存问题 https://easystack.atlassian.net/browse/EAS-8248
 memory leak: https://easystack.atlassian.net/browse/EAS-12312
 EAS-45694 - memory + signal
@@ -197,8 +202,13 @@ context switch:
 int syscall process etc.
 
 
-asyncio
+python asyncio
 https://realpython.com/async-io-python/
+
+async/await vs greenthread
+编码时是否要对库中的协程/greenthread了解？
+asyncio.queue 为什么需要task_done？
+
 
 jekyll:
 使用tag

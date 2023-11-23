@@ -1,61 +1,18 @@
-Load lisp file
-
-https://stackoverflow.com/questions/2580650/how-can-i-reload-emacs-after-changing-it
-
-You can use the command load-file (M-x load-file, then press return twice to accept the default filename, which is the current file being edited).
-
-You can also just move the point to the end of any sexp and press C-xC-e to execute just that sexp. Usually it's not necessary to reload the whole file if you're just changing a line or two.
-
-clangd
-sudo dnf install clang-tools-extra
-
-grub2.02
-$ ./autogen.sh
-$ ./configure
-$ bear make
-
-https://releases.llvm.org/9.0.0/tools/clang/tools/extra/docs/clangd/Installation.html
-
-https://www.mortens.dev/blog/emacs-and-the-language-server-protocol/
-
-clangd 用不了
-8.0 不会index project
-9.0 会自动index，但是很快coredump
-
-
-https://github.com/porterjamesj/virtualenvwrapper.el/blob/5649028ea0c049cb7dfa2105285dee9c00d189fb/virtualenvwrapper.el#L93-L102
-(projectile-project-root)
-
-
-
-https://lists.fedoraproject.org/pipermail/devel/2012-January/160917.html
-
-选中行并插入行号
-https://emacs.stackexchange.com/questions/47633/elisp-program-to-insert-line-numbers-into-a-buffer
-> Another way: C-x r N (verified). From emacswiki.org/emacs/NumberLines
-
-
+---
+layout: post
+title: emacs for myself
+tags: ["emacs"]
+date: 2023-12-08
+---
+## 启动
+### Emacs server + emacs client
 emaclient desktop
 https://debbugs.gnu.org/cgi/bugreport.cgi?bug=41719
 https://www.reddit.com/r/emacs/comments/ia2yv4/how_can_i_set_wm_class_for_emacs_27/
 https://unix.stackexchange.com/questions/521019/specifying-the-wm-class-of-a-program
 https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html
 
-recentf: 记录文件访问位置
-
-保存的自定义配置 会把所有配置改到custom.el，有些讨论
-https://emacs.stackexchange.com/questions/15069/how-to-not-save-duplicate-information-in-customize
-https://debbugs.gnu.org/cgi/bugreport.cgi?bug=21355 emacs 28 解决，可能可以解决这个而问题。
-https://www.reddit.com/r/emacs/comments/g46sg2/a_solution_to_the_agony_of_customsetvariables_and/
-
-TODO:
-emacs lsp: find implementation short cut
-
-ivy-switch-buffer 添加projectile文件
-https://emacs.stackexchange.com/questions/62342/can-ivy-switch-buffer-add-the-current-projects-files-via-projectile
-目前不好实现
-
-Tips:
+## 非默认配置
 ### Clickable text 行为
 当用鼠标选择链接的部分字符时，看不到选择区域，选中区域的颜色被链接的高亮显示覆盖。比如在markdown mode，Help mode下
 
@@ -123,6 +80,7 @@ overlay中定义的face和mouse-face比文本上直接定义的优先级高，�
 [Defining Clickable Text](https://www.gnu.org/software/emacs/manual/html_node/elisp/Clickable-Text.html)
 Emacs下很多链接的实现是基于[Button](https://www.gnu.org/software/emacs/manual/html_node/elisp/Buttons.html)的。
 
+## Programming
 ### 自动补全
 [company-mode](http://company-mode.github.io/)是一个补全框架，设计了模块化frontend和backend接口可以用来对接不同的补全方案。
 frontend用来显示与交互，backend用来产生补全的候选词。company本身提供的backend已经基本可以满足需求。
@@ -133,7 +91,94 @@ company的后端就是一个函数，company框架通过传递不同的参数实
 需要prefix命令的原因是company框架本身可能会对prefix进行一些预处理，比如prefix长度大于一定阈值才会进行补全。
 company框架本身不直接提供prefix，因为不同后端的补全逻辑不同，它的prefix也会不同。
 
-### 移动到下一个括号等
-| forward-list  | C-M-n | Move forward across one balanced group of parentheses.  |
-| backward-list | C-M-p | Move backward across one balanced group of parentheses. |
+## org-mode
+https://thackl.github.io/blogging-with-emacs-org-mode-and-jekyll
 
+https://orgmode.org/worg/org-tutorials/org-jekyll.html
+
+https://emacs.stackexchange.com/questions/19850/how-to-achieve-dynamic-projects-without-fixed-paths-for-publishing-from-org-mode
+
+关闭默认的toc, 否则front matter就不在第一行了
+#+OPTIONS: toc:nil
+#+TOC: headlines 2
+
+org mode里使用dot
+https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-dot.html
+
+
+### beamer制作幻灯片
+org-mode导出pdf 中文：以下两个配置 https://emacs-china.org/t/topic/2540/12
+#+LATEX_HEADER: \usepackage{ctex}
+#+latex_compiler: xelatex
+
+
+中文字体指南https://zhuanlan.zhihu.com/p/538459335
+
+beamer默认字体是sans serif字体
+https://tex.stackexchange.com/questions/79420/changing-font-style-using-beamer
+\setsansfont{Liberation Serif}
+#+LATEX_HEADER: \setCJKsansfont{SimSun}
+
+
+https://emacs.stackexchange.com/questions/36837/org-mode-how-can-i-add-a-section-name-only-frame-to-beamer-slides
+
+image scale
+https://stackoverflow.com/questions/30138947/setting-width-or-height-for-graphics-in-beamer-only-works-with-png
+https://tex.stackexchange.com/questions/17380/best-figure-size-adjustment-when-dealing-with-different-image-sizes
+
+### 导出为html时生成的div id一直变化
+主要相关代码
+```
+org-export-new-reference
+org-export-get-reference
+```
+org-mode-publish会给Headings等生成crossrefs，并缓存在本地的`.org-timestamps/`目录下。
+在`.org`文档的相关部分没做修改的情况下，包含在crossrefs中的id可以保持不变。(前提是可以访问到之前的缓存)。
+但是其他的id会一直变化，如special block。
+
+没有找到好的方案可以保留之前的id。完整解决需要修改orgmode生成html的逻辑。暂时用的方案为：
+使用如下代码，在生成的html中删除掉id字段。没有全部删除是因为Headings等生成的id有时候还是有用的，而且在上面提到的可以获取到之前生成的crossref的情况下，这些id会保留。
+```
+(defun org-html-body-remove-id (output)
+  "Remove random ID attributes generated by Org."
+  (replace-regexp-in-string
+     " id=\"[[:alpha:]-]*org[[:alnum:]]\\{7\\}\""
+     ""
+     output t))
+(advice-add 'org-html-special-block :filter-return #'org-html-body-remove-id)
+(advice-add 'org-html-paragraph :filter-return #'org-html-body-remove-id)
+```
+
+相关讨论：
+https://emacs.stackexchange.com/questions/36366/disable-auto-id-generation-in-org-mode-html-export
+https://jeffkreeftmeijer.com/ox-html-stable-ids/
+
+### add caption to images generated by a code block
+https://emacs.stackexchange.com/questions/12150/add-caption-to-an-image-generated-by-a-code-block
+
+### 默认居中图片
+https://emacs.stackexchange.com/questions/41534/alignment-of-images-in-html-export
+在orgmode文档开头添加
+`#+HTML_HEAD_EXTRA: <style> .figure p {text-align: right;}</style>`
+
+但是我是publish到jekyll中，用了body-only，没有上面的header。
+可以在jekyll的main.scss中添加
+```scss
+.figure p {text-align: center;}
+```
+
+## 日常使用cheatsheet
+| forward-list(C-M-n)                             | 向下移动到下一组成对出现的组，如下一个右括号，右引号 |
+| backward-list(C-M-p)                            | 向上移动到下一组成对出现的组，如上一个左括号，左引号 |
+| rectangle-number-lines(C-x r N)                 | 给选中行插入行号                                     |
+| eval-region/eval-buffer/eval-last-sexp(C-x C-e) | 执行选中行/执行当前buffer/光标处的elisp代码          |
+
+## Wish lists
+- ivy-switch-buffer 添加projectile文件
+  https://emacs.stackexchange.com/questions/62342/can-ivy-switch-buffer-add-the-current-projects-files-via-projectile
+  目前不好实现
+
+- 保存的自定义配置 会把所有配置改到custom.el，有些讨论
+  https://emacs.stackexchange.com/questions/15069/how-to-not-save-duplicate-information-in-customize
+  https://debbugs.gnu.org/cgi/bugreport.cgi?bug=21355 emacs 28 解决，可能可以解决这个而问题。
+  https://www.reddit.com/r/emacs/comments/g46sg2/a_solution_to_the_agony_of_customsetvariables_and/
