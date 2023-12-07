@@ -1,0 +1,352 @@
+#+latex_header: \usepackage{ctex}
+#+latex_header: \usetheme{default}
+
+#+latex_class: beamer
+#+latex_class_options:
+#+latex_header:
+#+latex_header_extra:
+#+subtitle:
+#+latex_engraved_theme:
+#+latex_compiler: xelatex
+
+#+OPTIONS: H:2 toc:nil
+#+COLUMNS: %40ITEM %10BEAMER_env(Env) %9BEAMER_envargs(Env Args) %4BEAMER_col(Col) %10BEAMER_extra(Extra)
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{目录}\tableofcontents[currentsection]\end{frame}}
+
+#+TITLE:     开源软件与软件工程
+#+AUTHOR:    方真
+#+EMAIL:     fangzhen@live.com
+#+DATE:      2023-12-05
+
+* 开源基础概念
+** 什么是开源软件
+开源软件是指源代码对公众开放，允许自由使用、复制、修改和分发的软件
+- 开放源代码：软件的源代码对任何人都是可用的，可以被查看和修改
+- 透明性与可验证性
+- 开放的设计与开发过程
+- 遵循开源协议
+** OSI对开源软件定义
+- 自由分发
+- 源代码开放
+- 允许修改和派生
+- 作者源代码的完整性
+- 不歧视任何个人或团体
+- 不歧视任何特定用途
+- 许可协议的分发：无需额外许可即可使用
+- 许可协议不局限于某个产品
+- 许可协议不得限制其他软件
+- 许可协议必须保持技术中立
+** FSF对自由软件的定义
+- 基于任何目的使用该软件的自由
+- 研究软件如何工作，修改软件的自由
+- 重分发该软件的自由
+- 重分发派生版本的自由
+** 开源软件简史
+- 早期软件著作权从无到有
+- Unix与C语言的诞生：60年代末到70年代初
+  - 源码可近乎免费获得，可用于非商业用途
+- 70到80年代：越来越多的公司将软件作为财产，源码受保护，无法免费获取
+  - 1976 比尔盖茨 《致爱好者的公开信》
+- 80到90年代，随着AT&T对SystemV 商业版收费和限制，BSD Unix逐步发展起来
+  - 至今OpenBSD/NetBSD/FreeBSD依然在开发
+- 1983年，Richard Stallman发起了GNU计划
+- 1991年，Linus发布第一版Linux内核。GNU/Linux成为了一个完全自由的开源操作系统
+- 1998年，Eric Raymond 和 Bruce Perens成立了开源促进组织(Open Source Initiative)。
+- 2004年，中国开源软件推进联盟成立
+- 2020年，开放原子开源基金会成立，是中国内地首个开源领域的基金会
+
+#+BEGIN_COMMENT
+https://opensource.org/osd/
+https://www.gnu.org/philosophy/free-sw.html
+
+https://zhuanlan.zhihu.com/p/150963217
+https://linuxstory.org/simple-history-about-opensource-1/
+#+END_COMMENT
+
+** 开源许可证
+开源许可证可以粗略地分为两大类：
+- 著佐权许可证 ("Copyleft license")
+  - 在软件被修改并再发行时，仍然强制要求公开源代码
+- 宽松自由软件许可协议 ("Permissive free software licence")
+  - 衍生软件可以变为专有软件
+  #+ATTR_LaTeX:
+  [[../assets/static/opensource/license.png]]
+
+** 开源软件的例子
+- 操作系统内核：Linux、BSD、AOSP
+- 浏览器：Firefox、Chromium
+- 数据库：Mariadb、PostgreSQL
+- 云计算：Openstack、Kubernetes
+- 虚拟化：Qemu、Bochs
+- 编程语言：Java、Python、Go、Rust
+- 编译器：GCC、LLVM
+- Web 服务器：Httpd、Nginx
+- 开发工具：Git、Eclipse、Emacs、Vi
+- Web & 桌面：Angular、Vue.js、Flutter
+- AI框架：TensorFlow、Pytorch
+- 多媒体：FFmpeg、VLC
+- 科学计算：NumPy
+
+* 开源项目中的软件工程
+** 开源软件工程实践的特点
+总的来说，开源项目中的软件工程实践强调了社区参与、透明度、协作和持续交付，这些特点使得开源项目具有更强的创新能力和灵活性。
+- 分散的开发者群体
+- 透明度和公开性
+- 社区参与和治理
+- 持续集成和持续交付（CI/CD）
+- 开放式问题跟踪和协作
+- 文档的重要性
+- 代码评审和协作
+#+BEGIN_COMMENT
+开源项目是研究软件工程非常好的素材，开源项目的一切都是公开透明的，你可以根据自己的需要去检索信息，对比差异，形成自己的观点。
+- 分散的开发者群体：
+    特点： 开源项目通常由全球分散的开发者组成，他们可能在不同的时区、文化和背景下工作。
+    挑战： 沟通和协作可能受到地理和文化差异的影响，因此需要强大的协作工具和有效的沟通方式。
+- 透明度和公开性：
+    特点： 开源项目的源代码和开发过程是公开的，所有人都可以查看和参与。
+    优势： 这种透明性有助于发现和修复漏洞，提高代码质量，同时也增加了社区参与的机会。
+- 社区参与和治理：
+    特点： 开源项目通常由一个社区来共同维护，社区成员可以是志愿者、个人开发者、以及来自不同公司的贡献者。
+    优势： 社区的多样性和广泛参与可以促进创新，提供更全面的视角和解决问题的途径。
+- 持续集成和持续交付（CI/CD）：
+    特点： 许多开源项目采用CI/CD实践，通过自动化测试和持续集成来确保代码的质量。
+    优势： 提高代码交付的速度，减少错误，有助于快速响应用户需求。
+- 开放式问题跟踪和协作：
+    特点： 使用开源工具进行问题跟踪，如GitHub的Issues，以便开发者可以提交和解决问题。
+    优势： 促进了开放式的问题讨论和协作，有助于整个社区对问题的共同理解和解决。
+- 自由许可证：
+    特点： 大多数开源项目使用自由许可证，如GPL、MIT等，以明确规定了软件的使用和分发条件。
+    优势： 提供了灵活的使用方式，吸引了更多的贡献者和用户。
+- 文档的重要性：
+    特点： 开源项目通常注重文档的编写，包括代码注释、使用手册、贡献指南等。
+    优势： 有助于降低新开发者的入门门槛，提高项目的可维护性。
+- 代码评审和协作：
+    特点： 代码评审是开源项目中常见的实践，通过多个开发者审查代码，提高代码质量。
+    优势： 促进了知识共享和技术分享，确保了高质量的代码。
+#+END_COMMENT
+** 案例：Openstack项目
+OpenStack是一个开源的云计算平台，旨在提供基础设施即服务（IaaS）和平台即服务（PaaS）解决方案。
+由Open Infrastructure Foundation 负责运营。
+许可协议采用Apache 2.0。
+
+** 治理与组织结构
+- 董事会
+  对OpenStack基金会以及基金会所保护的资产 (如OpenStack商标) 进行监督。
+  由赞助商指定以及选举产生。
+- 技术委员会(TC)
+  OpenStack项目的最高技术决策机构。TC成员由选举产生，负责项目技术方向、标准、项目治理规则等决策。
+- 用户委员会
+  用户委员会代表用户利益，与其他方进行合作，确保Openstack项目方向符合用户需求。
+- 项目团队
+  - OpenStack项目被组织成一系列的项目组，每个项目组负责一个或多个相关的项目。
+  - 每个项目组都有一个项目组长 (Project Team Lead，PTL) 负责组织和协调项目组的活动。
+  - 每个项目组都有多个Core Reviewer
+
+** 项目管理
+- Openstack项目是一直发展的，从最初的Nova到现在几十个项目。
+- 新项目的准入是由TC来评估和决定；同时项目开发者可以获得TC的投票权。
+- 必须满足Openstack要求(4 Opens):
+  - 开放源码
+  - 开放社区
+  - 开放开发
+  - 开放设计
+- Openstack的项目管理机制几经变化，目前流程有所简化。
+
+** Feature管理
+- Blueprint在Openstack项目中用来追踪重大特性的实现。
+  - 包含了详细规划和设计文档。
+  - 由社区成员创建，并经过讨论、审查和批准。
+- Blueprint的生命周期:
+  - 提出与创建，上传设计文档到代码库；
+  - Blueprint被批准，其中会经过讨论与反馈，修改与评审；
+  - 由提出者或其他人实现，并保持进度更新；
+  - 需求实现，状态变成完成
+
+** Bug追踪系统
+Openstack项目使用launchpad来进行bug与任务追踪。
+- 通常来说，Bug要有以下几个信息：
+  - Bug基本信息：现象、触发条件等
+  - 状态
+  - 优先级
+  - 报告人和负责人
+  - 目标版本，受影响版本
+  - 其他标签
+
+- Bug的主要生命周期
+  - 报告
+  - 确认优先级
+  - 修复方案的实现
+  - 完成
+
+** 沟通与文档
+开源项目的协作模式决定了它不同于商业软件的沟通方式。
+沟通主要发生在：
+- 开发者和社区内部
+- 外部用户与开发者
+沟通方式：
+- 各种需求管理，任务追踪系统
+- 即时通信
+- 邮件列表
+- 文档
+  - 文档在开源项目中处于核心地位
+  - 高质量的文档对于开源项目有巨大的助益
+
+** 代码托管与评审
+- Openstack项目采用Gerrit来管理代码。
+  - Gerrit是一个基于Git的代码评审和管理系统
+  - 一切皆可代码化
+- 代码都需要经过评审才能进入代码库
+  - 每个patch提交之后都会自动执行自动化测试
+  - 贡献者可以邀请其他人参与评审
+  - 项目的 Core Reviewer 需要同意
+- 分支模型
+
+** 生态
+- 赞助商：Openstack 赞助商分为白金赞助商，黄金赞助商，白银赞助商
+- 发行版：Redhat、Canonical、华为等
+- OpenInfra 峰会
+- COA认证与培训
+- 用户：2022年数据,全球300个公有云数据中心，4000万 CPU Core 的部署规模
+
+#+BEGIN_COMMENT
+openstack 最辉煌的时刻已经过去
+
+康威定律
+治理模式 https://opensourceway.community/posts/foundation_introduce/oss_governance_models/
+https://governance.openstack.org/
+https://docs.openstack.org/contributors/common/governance.html
+开源社区治理的演进http://bos.itdks.com/f4d7c942def74988b9c480107e490393.pdf
+
+项目 https://governance.openstack.org/tc/reference/projects/
+Blueprint https://wiki.openstack.org/wiki/Blueprints
+Bug https://docs.openstack.org/project-team-guide/bugs.html
+https://www.openstack.org/marketplace/
+
+CNCF:
+https://jimmysong.io/kubernetes-handbook/cloud-native/cncf-project-governing.html
+https://www.cncf.io/projects/
+#+END_COMMENT
+
+* 开源软件的软件工程挑战
+** 
+#+ATTR_LaTeX: :height \textheight
+[[../assets/static/opensource/fragile.png]]
+
+** 实例：OpenSSL heartbleed漏洞
+Heartbleed是OpenSSL的一个严重漏洞，它允许攻击者在正常情况下窃取本应受SSL协议加密保护的信息。
+- Heartbleed是OpenSSL在心跳机制的代码实现中产生的漏洞，并非SSL协议中的设计缺陷。
+- OpenSSL可能是使用最广泛的SSL/TLS实现：
+  - nginx、apache httpd都使用OpenSSL，两者合计占有一半以上的Web server市场
+  - 众多Linux发行版和BSD发行版都包含OpenSSL
+- 漏洞2012年引入，2014年4月公开。期间可能有未被披漏的利用。
+
+类似问题
+- log4j漏洞：CVE-2021-44228
+- core-js维护问题：https://github.com/zloirock/core-js/blob/master/docs/2023-02-14-so-whats-next.md
+
+** 挑战：项目本身
+- 项目开发过程
+  - 代码风格与质量
+  - 核心开发者的开放性
+- 资源有限
+- 项目运营
+  - 成功的项目需要重视代码之外的建设
+- 问题修复和通知的挑战
+
+** 挑战：项目之外
+- 广泛影响
+- 关注依赖链的复杂性
+- 及时关注并修复安全漏洞
+- 选取开源项目时的评估
+- 赞助开源项目，促进良性发展
+
+** 没有银弹
+开源软件有虽然诸多优势，但并不能解决软件开发的所有问题。
+- 项目可持续性
+- 安全风险
+- 许可问题
+  - Redis、Mongo许可变更
+- 版本兼容性
+  - 开源项目对兼容性的哲学与商业目标不一定一致
+- 社区支持有限
+  - 当缺乏足够的技能解决开源项目的问题时，无法像商业软件一样寻求支持
+- 过时的版本
+  - 91％的商业软件包含过时或废弃的开源组件
+  - 升级难度
+- 社区分裂
+  - MariDB vs. MySQL
+  - 派生版本与主线开源版本分裂
+
+** 业界方案
+开源生态产品化：
+将开源软件或技术整合到一个完整的产品或解决方案中，并通过商业化的方式提供给最终用户或企业。
+- 商业支持和服务
+- 可扩展性和定制性
+- 安全性和合规性
+- 用户友好的界面
+
+软件工程在开源生态产品化中发挥着关键作用
+- 通过软件工程的系统性思维来解决产品化过程中的问题
+- 着眼于整个产品和方案，而不只是具体的代码实现
+- 可维护性是软件生命周期的一个重要而关键的阶段
+
+#+BEGIN_COMMENT
+- 安全风险：
+     开源软件可能受到安全漏洞和攻击的威胁。虽然有庞大的社区可以发现和修复漏洞，但对于那些未被及时发现或修复的漏洞，使用开源软件可能会带来潜在的安全风险。
+- 社区支持和维护：
+     依赖于开源项目时，你可能会面临社区支持和维护的挑战。某些项目可能缺乏活跃的社区，导致问题不能得到及时解决或更新。
+- 兼容性问题：
+     在复杂的软件堆栈中，可能会出现不同开源软件之间的兼容性问题。这可能需要额外的工作来确保各个组件能够协同工作。
+- 法律和许可风险：
+     使用开源软件时，需要仔细阅读和理解相关的开源许可协议。不正确的许可管理可能导致法律风险，例如违反开源许可的规定。
+- 项目可持续性：
+     开源项目可能因为各种原因而停滞不前，导致项目的可持续性问题。这可能使得依赖该项目的组织面临升级和维护的挑战。
+- 知识和技能缺乏：
+     使用某个开源工具或框架可能需要特定的知识和技能。如果组织内部缺乏这些方面的专业知识，可能会增加学习和实施的难度。
+- 社区治理和决策过程：
+     参与开源社区可能会受到社区治理和决策过程的影响。在一个庞大的社区中，个人或组织可能无法对项目的发展方向产生强大的影响。
+- 对支持服务的需求：
+     在某些情况下，组织可能需要支付额外费用来获得对开源软件的支持服务。这可能在对商业用途的关键应用中成为一个因素。
+
+core-js  https://github.com/zloirock/core-js/blob/master/docs/2023-02-14-so-whats-next.md
+openssl https://www.geekpark.net/news/212283
+滴滴k8s升级
+https://kaiyuanshe.github.io/oss-book/start.html
+#+END_COMMENT
+
+* 参与开源项目
+** 参与理由
+参与开源项目是学习和实践软件工程的绝佳选择
+- 获得实际项目经验
+  - 了解真实世界的软件开发挑战和流程
+  - 比教科书学习更加深入的体验
+  - 可以实践软件工程的方法学
+- 锻炼协同合作的能力
+  - 能够与来自不同背景和地区的开发者合作
+- 提升技术能力
+  - 养成良好的设计和编程习惯
+  - 学习新技术
+
+** 几点建议
+- 保持平常心
+- 了解并融入社区文化和技术风格
+- 选择感兴趣的项目
+- 动手而不是观望
+- 多样化贡献
+  - 编码、文档、测试、基础设施、提交反馈
+- 参与面向学生的开源活动
+  - 如开源之夏：中科院软件所发起并支持
+
+** 真实世界的软件开发流程
+    #+ATTR_LaTeX: :height 0.9\textheight
+    [[../assets/static/opensource/workflow.png]]
+
+** 
+\begin{center}
+\Huge Thank You!
+\end{center}
+
+** 
+\begin{center}
+\Huge Q\&A
+\end{center}
