@@ -9,7 +9,7 @@ layout: default
 
   {{ content }}
 
-  {% assign all_posts = site.documents | sort: "date" | reverse %}
+  {% assign all_posts = site.documents | where_exp:"post","post.collection != 'posts'" | sort: "date" | reverse %}
   {% include post_list.html %}
   <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
 
