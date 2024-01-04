@@ -72,13 +72,13 @@ ACPI另一个目标是操作系统无关。通过AML代码标准化。OSPM需要
 详见 5.2 ACPI System Description Tables
 ACPI 表都包含相同格式的表头，表头中signature字段表示表的类型。
 
-    XSDT：Extended System Description Table。包含了其他ACPI表的位置信息。
+    RSDP：包含了指向RSDT和XSDT表的指针。操作系统获取ACPI信息，先从找到RSDP开始。在BIOS和UEFI固件上，寻找RSDP的方式不同。参考spec 5.2.5。
+    XSDT：Extended System Description Table。包含了其他ACPI表的位置信息。取代了ACPI 1.0的RSDT。
     FADT：Fixed ACPI Description Table，定义了必要的固定硬件ACPI信息，包括固定硬件寄存器的地址。FADT还包含了DSDT的地址。其Signature是“FACP”。
     DSDT：Differentiated System Description Table，包含了AML 代码（定义块）。
     SSDT：DSDT的补充部分，表格式和DSDT一样。SSDT的地址在XSDT中，可能有多个SSDT。加载了DSDT以后会按顺序加载SSDT。SSDT的内容并不能覆盖DSDT，只能作为补充。
     MADT：高级可编程中断控制器。MADT的地址在XSDT中。包含了处理器Local APIC和I/O APIC。signature为APIC。
 
-    RSDP：BIOS刚开机的时候就会加载它到内存1M以内的地方，包含了指向RSDP和XSDT表的指针。ACPI3.0后被XSDT取代。
 
 ### ACPI namespace
 ACPI 子系统解析DSDT等表时，需要把定义块加载到namespace中。ACPI子系统只维护一个namespace，但namespace中的object是分级的。一个namespace的示例如下：

@@ -10,3 +10,13 @@ physical memory model
 interrupt
 cpu exception
 qemu debug
+SMP
+
+unwinding
+memory setup & allocator
+  memblock: free memory
+  memory mapping vs allocation
+
+idle
+https://www.kernel.org/doc/html/v5.0/admin-guide/pm/cpuidle.html
+https://unix.stackexchange.com/questions/361245/what-does-an-idle-cpu-process-do
