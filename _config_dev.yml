@@ -1,0 +1,4 @@
+collections:
+  drafts:
+    output: true
+    order: 100

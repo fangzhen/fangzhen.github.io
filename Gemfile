@@ -23,3 +23,6 @@ gem "github-pages", group: :jekyll_plugins
 #end
 
 gem "webrick", "~> 1.7"
+
+# ""json"" is required, but not specified in Gemfile of jekyll
+gem "json"
