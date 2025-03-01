@@ -101,3 +101,7 @@ References：
   - https://stackoverflow.com/questions/20183094/what-is-a-misaligned-pointer
 - [rust中reference和pointer的区别](https://ntietz.com/blog/rust-references-vs-pointers/)：简单来说，两者的底层表示是一样的，都是保存了某块内存的地址；区别主要在于语义层面上。
 - [E0793](https://doc.rust-lang.org/stable/error_codes/E0793.html)
+
+
+https://doc.rust-lang.org/reference/behavior-considered-undefined.html
+> It is the programmer’s responsibility when writing unsafe code to ensure that any safe code interacting with the unsafe code cannot trigger these behaviors. unsafe code that satisfies this property for any safe client is called sound; if unsafe code can be misused by safe code to exhibit undefined behavior, it is unsound.

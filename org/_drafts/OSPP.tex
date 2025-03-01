@@ -1,0 +1,213 @@
+% Created 2024-12-13 Fri 10:20
+% Intended LaTeX compiler: xelatex
+\documentclass[presentation]{beamer}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{ctex}
+\usepackage{hyperref}
+\hypersetup{bookmarksdepth = 3}
+\usetheme{Hannover}
+\usecolortheme{seahorse}
+\date{}
+\title{读书笔记}
+\subtitle{操作系统：原理与实践}
+\AtBeginSubsection[]{\begin{frame}\frametitle{}\setcounter{tocdepth}{2}\tableofcontents[currentsubsection,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]\end{frame}}
+\hypersetup{
+ pdfauthor={},
+ pdftitle={读书笔记},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.6.15)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+
+\section{第一卷 内核与进程}
+\label{sec:orga77bb8d}
+\subsection{引言}
+\label{sec:org14c0d42}
+\begin{frame}[label={sec:org0381675}]{引言}
+考虑一个Web server，操作系统的部分工作是使得开发类似web server这样的应用更加容易。从Web server的角度，操作系统可能要提供一些支持，比如：
+\begin{itemize}
+\item Web server需要访问文件或调用外部程序计算并获取结果 - 操作系统怎么让不同的应用互相通信？
+\item 客户端可以并发访问，为获得更好的体验，server同时处理多个客户端的请求 - 操作系统如何支持应用同时做多件事情
+\item 随着业务增长，web server可能要部署在其他硬件上 - 操作系统如何屏蔽硬件差异，以避免重写web server？
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org083b705}]{操作系统定义}
+操作系统是一个软件层，管理计算机资源，为用户及其应用程序提供服务。
+\end{frame}
+
+\begin{frame}[label={sec:org6939fdc}]{操作系统角色}
+操作系统作为硬件与应用的中间层，需要扮演三个角色：
+\begin{itemize}
+\item 裁判（Referee）：资源共享。应用共享硬件资源，需要操作系统决定资源何时分配给哪个应用。
+\item 幻术师（Illusionist）：提供一个物理硬件的抽象层，使得应用仿佛拥有完整的、资源不受限的计算机从而简化设计。例如应用不必关注物理内存分布、不必关注其他应用的资源竞争。
+\item 粘合剂（Glue）：为应用程序提供公共服务或组件，例如文件系统、统一的用户界面观感、IO。
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orgdf33c4c}]{其他系统的类似角色}
+除了操作系统，很多其他系统也有类似的设计挑战，比如，云计算、浏览器、数据库系统、互联网。以云计算为例：
+\begin{itemize}
+\item Referee：资源在云上不同应用之间如何分配？
+\item Illusionist：云的资源一直在变化，应该如何向应用开发者隔离硬件变化？
+\item Glue：云上服务通常跨主机运行。云软件需要提供那些服务来协调不同的服务以及共享数据？
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org4bf7c15}]{操作系统评估标准：}
+\begin{itemize}
+\item 可靠性和可用性：系统是否按照预期运行及其运行时间比例。
+\item 安全性：是否能够防止恶意攻击及保护用户数据隐私。
+\item 可移植性：系统是否易于适配新的硬件。
+\item 性能：包括响应时间、吞吐量以及可预测性。
+\item 流行度：应用程序、硬件、用户生态。
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orgd9b17cf}]{操作系统：过去现在与未来}
+\begin{itemize}
+\item 早期操作系统：操作系统主要是通过提供一些公共服务（如标准IO程序）来减少编程错误。
+\item 批处理操作系统
+\begin{itemize}
+\item 依次对每个任务加载、执行、卸载的步骤。在一个任务执行时，利用DMA，可以并行进行IO操作。
+\item 多任务操作系统：允许多个任务并发执行，当一个任务需要IO给出CPU时，其他任务可以执行，提高了处理器利用率。也带来了更高的隔离需求。
+\item 虚拟机最早用来解决批处理系统难以Debug的问题。
+\end{itemize}
+\item 分时操作系统：支持交互式使用，而不只是批处理。
+\item 现代操作系统：随着计算机技术的发展，各种现代操作系统运行在不同的硬件上，包括个人电脑、智能手机、嵌入式设备、服务器等。
+\item 未来操作系统展望：
+\begin{itemize}
+\item 安全性和可靠性的更高要求
+\item 操作系统需要适应底层硬件发展。数据中心向大规模、异构方向发展；无处不在的便携硬件，如各种可穿戴设备。
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\subsection{内核抽象}
+\label{sec:orgc85c8e1}
+
+\begin{frame}[label={sec:org6c2884d}]{概述}
+\begin{itemize}
+\item 操作系统的一个核心角色是保护——把misbehaving的程序和用户隔离开来，以避免影响其他应用或操作系统本身。
+\item 保护是实现某些操作系统其他目标的基础。如安全性、可靠性、隐私、公平资源分配。
+\item \alert{\alert{进程是内核提供的受保护执行的抽象}}
+\item 这种设计模式——可扩展的程序运行第三方脚本——在其他领域也有很多，比如浏览器。
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org2dc6fad}]{进程抽象}
+\begin{itemize}
+\item 进程是程序运行实例，
+\begin{itemize}
+\item 执行指令
+\begin{itemize}
+\item program counter
+\item 不同类型的指令：算术、分支、访问IO等
+\end{itemize}
+\item 访问内存
+\begin{itemize}
+\item 代码
+\item 数据
+\item 堆
+\item 栈
+\end{itemize}
+\end{itemize}
+\item 操作系统通过进程控制块（PCB）管理和追踪进程
+\item 本章只讨论简单的单线程进程
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orga9108a9}]{进程保护}
+操作系统如何防止进程危害其他进程或者操作系统本身？
+\begin{itemize}
+\item 不考虑性能，一个假想的方案：由内核来执行用户进程的指令。
+\begin{itemize}
+\item 对于用户态，在执行每个指令前检查其权限，如
+\begin{itemize}
+\item 是否会跳转到其他进程内存？
+\item 是否访问其他进程的数据？
+\end{itemize}
+\end{itemize}
+\item 如果想要用户态代码直接在处理器上运行，硬件至少需要提供以下支持：
+\begin{itemize}
+\item 特权指令：只能在内核态执行，不能在用户态执行；例如
+\begin{itemize}
+\item 用户态代码不能修改自己能访问的内存范围
+\item 用户态代码不能关闭中断
+\end{itemize}
+\item 内存保护
+\begin{itemize}
+\item 用户进程只能读写自己的内存，而不能访问其他进程或kernel的内存
+\item 内存保护的一种简单方案：每个进程通过base和bound两个寄存器指定合法的内存地址。
+\begin{itemize}
+\item 相比虚拟地址方案，缺少很多特性。
+\end{itemize}
+\end{itemize}
+\item 时钟中断：允许内核周期性重获处理器的控制权，才有可能进行多任务调度。
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org1e7603f}]{模式切换}
+\begin{itemize}
+\item 用户态到内核态
+\begin{itemize}
+\item 外部中断
+\item 处理器异常
+\item 系统调用
+\end{itemize}
+\item 内核态到用户态
+\begin{itemize}
+\item 新建进程
+\item 切换进程
+\item 从中断、异常、系统调用中返回
+\item Upcall(内核向用户态发起的调用): 如linux下的信号
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org11e5cd8}]{实现安全的模式切换}
+\begin{itemize}
+\item context switch 的实现至少应该满足：
+\begin{itemize}
+\item 受限地进入内核：用户进程不能任意访问内核内存，硬件必须确保进入内核的入口点是由内核设置的入口点。
+\item 处理器状态的原子切换：例如不能发生PC切换到内核态代码，但内存保护状态还没切换到内核态。
+\item 中断处理对被中断的进程透明。
+\end{itemize}
+\item 需要软硬件共同实现，相关机制包括：
+\begin{itemize}
+\item 中断向量
+\item Interrupt stack/Kernel stack：处理器和内核配合，在中断或系统调用时切换栈
+\item 中断屏蔽：有些内核代码执行过程不能被中断，需要屏蔽中断
+\item 保存/恢复被中断的现场，主要是寄存器。
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orge3d20f7}]{具体实现}
+\begin{itemize}
+\item x86中断处理的模式切换
+\item 系统调用的实现
+\item 创建新进程
+\item 实现upcall
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orge3259b9}]{Case Study}
+\begin{itemize}
+\item 从BIOS到bootloader到Kernel启动过程
+\item 虚拟机
+\end{itemize}
+\end{frame}
+\end{document}

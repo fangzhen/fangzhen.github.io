@@ -1,6 +1,6 @@
-% Created 2023-12-08 Fri 18:07
+% Created 2024-12-05 Thu 16:03
 % Intended LaTeX compiler: xelatex
-\documentclass{beamer}
+\documentclass[presentation]{beamer}
 \usepackage{graphicx}
 \usepackage{longtable}
 \usepackage{wrapfig}
@@ -11,26 +11,46 @@
 \usepackage{capt-of}
 \usepackage{hyperref}
 \usepackage{ctex}
-\usetheme{default}
-\usetheme{default}
-\author{方真}
-\date{2023-12-05}
-\title{开源软件与软件工程}
-\AtBeginSection[]{\begin{frame}<beamer>\frametitle{目录}\tableofcontents[currentsection]\end{frame}}
+\usepackage{hyperref}
+\hypersetup{bookmarksdepth = 3}
+\usetheme{Hannover}
+\usecolortheme{seahorse}
+\date{}
+\title{软件工程分享}
+\AtBeginSection[]{\begin{frame}\frametitle{}\setcounter{tocdepth}{2}\tableofcontents[currentsection,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]\end{frame}}
 \hypersetup{
- pdfauthor={方真},
- pdftitle={开源软件与软件工程},
+ pdfauthor={},
+ pdftitle={软件工程分享},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 29.1 (Org mode 9.6.6)}, 
+ pdfcreator={Emacs 29.4 (Org mode 9.6.15)}, 
  pdflang={English}}
 \begin{document}
 
 \maketitle
 
-\section{开源基础概念}
-\label{sec:org2f5f59c}
-\begin{frame}[label={sec:org4c16e6a}]{什么是开源软件}
+\section{软件开发流程示例}
+\label{sec:org2e5feb0}
+\begin{frame}[label={sec:org9732b54}]{}
+\begin{center}
+\includegraphics[height=0.9\textheight]{../assets/static/opensource/workflow.png}
+\end{center}
+\end{frame}
+\begin{frame}[label={sec:org7bff748}]{}
+\begin{center}
+\includegraphics[height=0.9\textheight]{../assets/static/opensource/workflow1.png}
+\end{center}
+\end{frame}
+\begin{frame}[label={sec:orgf629aab}]{}
+\begin{center}
+\includegraphics[height=0.9\textheight]{../assets/static/opensource/workflow2.png}
+\end{center}
+\end{frame}
+
+
+\section{开源软件与软件工程}
+\label{sec:org739a092}
+\begin{frame}[label={sec:org9e1dfa8}]{什么是开源软件}
 开源软件是指源代码对公众开放，允许自由使用、复制、修改和分发的软件
 \begin{itemize}
 \item 开放源代码：软件的源代码对任何人都是可用的，可以被查看和修改
@@ -38,30 +58,18 @@
 \item 开放的设计与开发过程
 \item 遵循开源协议
 \end{itemize}
-\end{frame}
-\begin{frame}[label={sec:orga97a4b0}]{OSI对开源软件定义}
+
+开源组织/社区
 \begin{itemize}
-\item 自由分发
-\item 源代码开放
-\item 允许修改和派生
-\item 作者源代码的完整性
-\item 不歧视任何个人或团体
-\item 不歧视任何特定用途
-\item 许可协议的分发：无需额外许可即可使用
-\item 许可协议不局限于某个产品
-\item 许可协议不得限制其他软件
-\item 许可协议必须保持技术中立
+\item Open Source Initiative (OSI)
+\item Free Software Foundation (FSF)
+\item The Linux Foundation
+\item Apache Software Foundation (ASF)
+\item 开放原子开源基金会
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org57c58ce}]{FSF对自由软件的定义}
-\begin{itemize}
-\item 基于任何目的使用该软件的自由
-\item 研究软件如何工作，修改软件的自由
-\item 重分发该软件的自由
-\item 重分发派生版本的自由
-\end{itemize}
-\end{frame}
-\begin{frame}[label={sec:orgcea1471}]{开源软件简史}
+
+\begin{frame}[label={sec:org52cf026}]{开源软件简史}
 \begin{itemize}
 \item 早期软件著作权从无到有
 \item Unix与C语言的诞生：60年代末到70年代初
@@ -84,7 +92,7 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org62b9030}]{开源许可证}
+\begin{frame}[label={sec:org5371352}]{开源许可证}
 开源许可证可以粗略地分为两大类：
 \begin{itemize}
 \item 著佐权许可证 ("Copyleft license")
@@ -101,7 +109,7 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgc98b2f2}]{开源软件的例子}
+\begin{frame}[label={sec:orge1e7011}]{开源软件的例子}
 \begin{itemize}
 \item 操作系统内核：Linux、BSD、AOSP
 \item 浏览器：Firefox、Chromium
@@ -119,9 +127,7 @@
 \end{itemize}
 \end{frame}
 
-\section{开源项目中的软件工程}
-\label{sec:org4e077ee}
-\begin{frame}[label={sec:orgfc3bc9a}]{开源软件工程实践的特点}
+\begin{frame}[label={sec:org4c6e8a9}]{开源软件工程实践的特点}
 总的来说，开源项目中的软件工程实践强调了社区参与、透明度、协作和持续交付，这些特点使得开源项目具有更强的创新能力和灵活性。
 \begin{itemize}
 \item 分散的开发者群体
@@ -133,13 +139,13 @@
 \item 代码评审和协作
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orgfc9f4fd}]{案例：Openstack项目}
+\begin{frame}[label={sec:org7e78f2f}]{案例：Openstack项目}
 OpenStack是一个开源的云计算平台，旨在提供基础设施即服务（IaaS）和平台即服务（PaaS）解决方案。
 由Open Infrastructure Foundation 负责运营。
 许可协议采用Apache 2.0。
 \end{frame}
 
-\begin{frame}[label={sec:orgd7a7f74}]{治理与组织结构}
+\begin{frame}[label={sec:org467d3a1}]{治理与组织结构}
 \begin{itemize}
 \item 董事会
 对OpenStack基金会以及基金会所保护的资产 (如OpenStack商标) 进行监督。
@@ -157,9 +163,9 @@ OpenStack项目的最高技术决策机构。TC成员由选举产生，负责项
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org45f7cc4}]{项目管理}
+\begin{frame}[label={sec:orgb3ada0e}]{项目管理}
 \begin{itemize}
-\item Openstack项目是一直发展的，从最初的Nova到现在几十个项目。
+\item Openstack项目是持续发展的，从最初的Nova到现在几十个项目。
 \item 新项目的准入是由TC来评估和决定；同时项目开发者可以获得TC的投票权。
 \item 必须满足Openstack要求(4 Opens):
 \begin{itemize}
@@ -172,7 +178,7 @@ OpenStack项目的最高技术决策机构。TC成员由选举产生，负责项
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgf9e0d31}]{Feature管理}
+\begin{frame}[label={sec:orge9cc0b0}]{Feature管理}
 \begin{itemize}
 \item Blueprint在Openstack项目中用来追踪重大特性的实现。
 \begin{itemize}
@@ -189,7 +195,7 @@ OpenStack项目的最高技术决策机构。TC成员由选举产生，负责项
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgf66b3fc}]{Bug追踪系统}
+\begin{frame}[label={sec:org3a6b587}]{Bug追踪系统}
 Openstack项目使用launchpad来进行bug与任务追踪。
 \begin{itemize}
 \item 通常来说，Bug要有以下几个信息：
@@ -212,7 +218,7 @@ Openstack项目使用launchpad来进行bug与任务追踪。
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org296ec85}]{沟通与文档}
+\begin{frame}[label={sec:org507f241}]{沟通与文档}
 开源项目的协作模式决定了它不同于商业软件的沟通方式。
 沟通主要发生在：
 \begin{itemize}
@@ -232,7 +238,7 @@ Openstack项目使用launchpad来进行bug与任务追踪。
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org529bf66}]{代码托管与评审}
+\begin{frame}[label={sec:org8a28910}]{代码托管与评审}
 \begin{itemize}
 \item Openstack项目采用Gerrit来管理代码。
 \begin{itemize}
@@ -249,7 +255,7 @@ Openstack项目使用launchpad来进行bug与任务追踪。
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org1e63c5a}]{生态}
+\begin{frame}[label={sec:orgdc91bb9}]{生态}
 \begin{itemize}
 \item 赞助商：Openstack 赞助商分为白金赞助商，黄金赞助商，白银赞助商
 \item 发行版：Redhat、Canonical、华为等
@@ -259,15 +265,13 @@ Openstack项目使用launchpad来进行bug与任务追踪。
 \end{itemize}
 \end{frame}
 
-\section{开源软件的软件工程挑战}
-\label{sec:orgd101a9b}
-\begin{frame}[label={sec:org5e725f7}]{}
+\begin{frame}[label={sec:org1d005af}]{开源软件的软件工程挑战}
 \begin{center}
 \includegraphics[height=\textheight]{../assets/static/opensource/fragile.png}
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org6714fa2}]{实例：OpenSSL heartbleed漏洞}
+\begin{frame}[label={sec:org84613a6}]{实例：OpenSSL heartbleed漏洞}
 Heartbleed是OpenSSL的一个严重漏洞，它允许攻击者在正常情况下窃取本应受SSL协议加密保护的信息。
 \begin{itemize}
 \item Heartbleed是OpenSSL在心跳机制的代码实现中产生的漏洞，并非SSL协议中的设计缺陷。
@@ -286,7 +290,7 @@ Heartbleed是OpenSSL的一个严重漏洞，它允许攻击者在正常情况下
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org3225c3e}]{挑战：项目本身}
+\begin{frame}[label={sec:orgdae1518}]{挑战：项目本身}
 \begin{itemize}
 \item 项目开发过程
 \begin{itemize}
@@ -302,7 +306,7 @@ Heartbleed是OpenSSL的一个严重漏洞，它允许攻击者在正常情况下
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org40d9e20}]{挑战：项目之外}
+\begin{frame}[label={sec:org775c36d}]{挑战：项目之外}
 \begin{itemize}
 \item 广泛影响
 \item 关注依赖链的复杂性
@@ -312,10 +316,9 @@ Heartbleed是OpenSSL的一个严重漏洞，它允许攻击者在正常情况下
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orge9ddf51}]{没有银弹}
+\begin{frame}[label={sec:orgb5592b9}]{没有银弹}
 开源软件有虽然诸多优势，但并不能解决软件开发的所有问题。
 \begin{itemize}
-\item 项目可持续性
 \item 安全风险
 \item 许可问题
 \begin{itemize}
@@ -334,16 +337,15 @@ Heartbleed是OpenSSL的一个严重漏洞，它允许攻击者在正常情况下
 \item 91％的商业软件包含过时或废弃的开源组件
 \item 升级难度
 \end{itemize}
-\item 社区分裂
+\item 社区管理
 \begin{itemize}
-\item MariDB vs. MySQL
-\item 派生版本与主线开源版本分裂
+\item 分裂，例如MariDB vs. MySQL
+\item 项目可持续性
 \end{itemize}
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org343f85b}]{业界方案}
-开源生态产品化：
+\begin{frame}[label={sec:org25dfb45}]{开源生态产品化}
 将开源软件或技术整合到一个完整的产品或解决方案中，并通过商业化的方式提供给最终用户或企业。
 \begin{itemize}
 \item 商业支持和服务
@@ -360,10 +362,8 @@ Heartbleed是OpenSSL的一个严重漏洞，它允许攻击者在正常情况下
 \end{itemize}
 \end{frame}
 
-\section{参与开源项目}
-\label{sec:org564f51f}
-\begin{frame}[label={sec:org00e1e2d}]{参与理由}
-参与开源项目是学习和实践软件工程的绝佳选择
+\begin{frame}[label={sec:orgddd9788}]{参与开源项目}
+参与开源项目是学习和实践软件工程理念的很好选择
 \begin{itemize}
 \item 获得实际项目经验
 \begin{itemize}
@@ -383,7 +383,7 @@ Heartbleed是OpenSSL的一个严重漏洞，它允许攻击者在正常情况下
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgd6f25ef}]{几点建议}
+\begin{frame}[label={sec:org70b1100}]{几点建议}
 \begin{itemize}
 \item 保持平常心
 \item 了解并融入社区文化和技术风格
@@ -395,24 +395,89 @@ Heartbleed是OpenSSL的一个严重漏洞，它允许攻击者在正常情况下
 \end{itemize}
 \item 参与面向学生的开源活动
 \begin{itemize}
-\item 如开源之夏：中科院软件所发起并支持
+\item 如开源之夏(OSPP)/GSoc等
 \end{itemize}
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org4a4c1ab}]{真实世界的软件开发流程}
+\section{AI 重塑软件工程过程}
+\label{sec:orge562417}
+\begin{frame}[label={sec:org3ea7b13}]{想象一下}
+\begin{verse}
+用户: 早上好，Nova。我需要一个记账应用，帮我追踪日常支出。\\[0pt]
+Nova: 啊，记账应用，这个我最擅长！我来记录下您的“收入-存款=焦虑”公式。真是个经典用法。\\[0pt]
+用户: 哈哈……行吧，那顺便给我加个预算提醒功能，别整太多花里胡哨的。\\[0pt]
+Nova: 已添加！不过据我观察，您会在预算达到10\%时就不再看提醒了——然后又跑来问我“钱去哪儿了”。\\[0pt]
+用户: 哎别管那个，提醒我就是了！再加个功能，每个月总结一下消费情况，比如最爱花钱的类别是什么。\\[0pt]
+Nova: 哇哦，我已经激动到要嘲笑您了！“最爱花钱的类别”会是“餐饮”和“冲动购物”吧？不出所料的话，我这月末的总结就是：“钱去哪儿了”。\\[0pt]
+用户: 好吧，那也加个安全性，给我加密数据，保密点！\\[0pt]
+Nova: 没问题，绝对安全！加密完毕。唯一可能访问到的就是——抱歉，开玩笑了，您的“冲动消费习惯”决定了没人需要偷，您自己就会“花光”。\\[0pt]
+用户: ……Nova，你这服务太“贴心”了。算了，谢了。\\[0pt]
+\end{verse}
+\end{frame}
+
+\begin{frame}[label={sec:orgec5c974}]{}
 \begin{center}
-\includegraphics[height=0.9\textheight]{../assets/static/opensource/workflow.png}
+\includegraphics[width=.9\linewidth]{../assets/static/opensource/stackoverflow-dev-survey-2024-ai-sentiment-and-usage-ai-select-social.png}
+\end{center}
+\begin{center}
+\includegraphics[width=.9\linewidth]{../assets/static/opensource/stackoverflow-dev-survey-2024-ai-developer-tools-ai-tool-social.png}
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org7b57a75}]{}
+\begin{frame}[label={sec:org44a9dfb}]{}
+\begin{center}
+\includegraphics[width=.9\linewidth]{../assets/static/opensource/stackoverflow-dev-survey-2024-ai-developer-tools-ai-acc-social.png}
+\end{center}
+\begin{center}
+\includegraphics[width=.9\linewidth]{../assets/static/opensource/stackoverflow-dev-survey-2024-ai-developer-tools-ai-ben-social.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orgeb36968}]{}
+\begin{center}
+\includegraphics[width=.9\linewidth]{../assets/static/opensource/stackoverflow-dev-survey-2024-ai-efficacy-and-ethics-ai-challenges-social.png}
+\end{center}
+\begin{center}
+\includegraphics[width=.9\linewidth]{../assets/static/opensource/stackoverflow-dev-survey-2024-ai-efficacy-and-ethics-ai-threat-social.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org9e04f01}]{}
+\begin{center}
+\includegraphics[width=.9\linewidth]{../assets/static/opensource/stackoverflow-dev-survey-2024-technology-most-popular-technologies-ai-search-dev-social.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org9b60585}]{示例： AI自动编写扫雷游戏}
+\color{green}{deepseek> 请帮我实现一个网页版扫雷游戏} \\[0pt]
+\color{green}{deepseek> /ask 这个游戏怎么玩？} \\[0pt]
+\color{green}{deepseek> 实现标记地雷的功能：你可以通过右键点击格子来标记你认为可能是地雷的格子。}\\[0pt]
+\color{green}{deepseek> 实现以下功能：当游戏成功后弹窗提示成功。并询问用户是否新开一局。}\\[0pt]
+\color{red}{deepseek> 增加计时功能}\\[0pt]
+\color{red}{deepseek> 添加功能：游戏时间计时。游戏结束时重置计时器。}\\[0pt]
+\color{orange}{deepseek> 添加功能：游戏时间计时。游戏结束时重置计时器。}\\[0pt]
+\color{red}{deepseek> 游戏开始后计时器需要开始计时。}\\[0pt]
+\color{red}{deepseek> 游戏开始后计时器没有开始计时，请修复。}\\[0pt]
+\color{green}{claude> 这个扫雷游戏在开始游戏后计时器没有启动，请修复}\\[0pt]
+\color{red}{deepseek> 游戏结束后没有重新开始，请修复}\\[0pt]
+\color{green}{claude> 这个扫雷游戏游戏失败后没有重新开始，请修复}\\[0pt]
+\color{green}{claude> 游戏开始后，在第一次点击之后才开始计时。}
+\end{frame}
+
+\begin{frame}[label={sec:orgab170c7}]{}
+\begin{center}
+\includegraphics[width=.9\linewidth]{../assets/static/opensource/game.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org1555229}]{}
 \begin{center}
 \Huge Thank You!
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org26c43b0}]{}
+\begin{frame}[label={sec:org36bcfca}]{}
 \begin{center}
 \Huge Q\&A
 \end{center}

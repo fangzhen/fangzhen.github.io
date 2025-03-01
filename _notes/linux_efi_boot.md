@@ -8,6 +8,9 @@ update: 2023-05-31
 
 本文描述linux kernel在x86_64架构下，通过UEFI启动时的启动过程。
 
+* TOC
+{:toc}
+
 > linux kernel efi stub 相关的代码在v5.7有一次重构，重构后eboot.c的内容都移到了efi/libstub下。而且相关的优化一直在进行。本文参考的代码版本为v6.2
 
 ## Kernel image build
@@ -26,11 +29,11 @@ x86_64下kernel build的默认target是`arch/x86/boot/bzImage`，也是通过gru
 
 根据makefile，从vmlinux最终生成bzImage的过程为：
 ```
-vmlinux (静态链接的ELF可执行文件)->(objcopy)
+vmlinux (静态链接的ELF可执行文件)->(objcopy to strip debugging and comments)
 arch/x86/boot/compressed/vmlinux.bin ->
 arch/x86/boot/compressed/vmlinux.bin.gz ->
-arch/x86/boot/compressed/piggy.o ->
-arch/x86/boot/compressed/vmlinux (ELF格式) ->(objcopy -o binary)
+arch/x86/boot/compressed/piggy.o (wrapper of vmlinux.bin.gz，添加了一些symbol，用于kernel decompression) ->
+arch/x86/boot/compressed/vmlinux (ELF格式，包含了包括piggy.o在内的多个obj文件，例如还包含string.o，给出了memset/memcpy等的实现，该实现不依赖gcc) ->(objcopy -o binary)
 arch/x86/boot/vmlinux.bin (Raw binary 格式) ->
 arch/x86/boot/bzImage (setup.bin 和vmlinux.bin合成bzImage)
 ```
@@ -124,7 +127,7 @@ bootloader(如grub)->
 bzImage ->
 vmlinux
 ```
-本文主要分析UEFI Firmware下，`bzImage -> vmlinux` 这个过程，即从控制权转移到bzImage之前到进入vmlinux之后。
+本文主要分析UEFI Firmware下，`bzImage -> vmlinux` 这个过程，即从控制权转移到bzImage之后到进入vmlinux之前。
 
 主要相关代码：
 

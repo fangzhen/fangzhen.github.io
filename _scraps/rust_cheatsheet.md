@@ -8,6 +8,9 @@ update: 2023-03-13
 
 本文不是rust入门或手册，只是一些对我个人来说容易忘记或混淆的点的整理。
 
+* TOC
+{:toc}
+
 ## 语言与编译器(rustc)
 ### Edition
 Edition 机制为了**保证后向兼容**。不同的edition可能有不兼容的修改。例如`async`在2018 edition变成关键字，在2015 edition可以作为普通变量名。通过在Cargo.toml中指定edition=2018，rust编译时会按照2018的语法来进行编译。

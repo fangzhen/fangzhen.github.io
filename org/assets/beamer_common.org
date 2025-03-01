@@ -1,0 +1,64 @@
+* common
+#+startup: beamer
+#+latex_class: beamer
+#+latex_class_options: [presentation]
+#+latex_header: \usepackage{ctex}
+#+latex_header: \usepackage{hyperref}
+#+latex_header: \usepackage{newunicodechar}
+#+latex_header: \newunicodechar{​}{\ignorespaces} % 忽略零宽空格
+#+latex_header: \hypersetup{bookmarksdepth = 3}
+#+latex_compiler: xelatex
+#+BEAMER_THEME: Hannover
+#+BEAMER_COLOR_THEME: seahorse
+# #+latex_header: \usefonttheme{serif}
+#+COLUMNS: %40ITEM %10BEAMER_env(Env) %9BEAMER_envargs(Env Args) %4BEAMER_col(Col) %10BEAMER_extra(Extra)
+#+OPTIONS: toc:nil
+
+* h3
+#+OPTIONS: H:3
+#+BEAMER_HEADER: \AtBeginSubsection[]{\begin{frame}\frametitle{}\setcounter{tocdepth}{2}\tableofcontents[currentsubsection,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]\end{frame}}
+
+* h2
+#+OPTIONS: H:2
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}\frametitle{}\setcounter{tocdepth}{2}\tableofcontents[currentsection,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]\end{frame}}
+
+* comment
+#+BEGIN_COMMENT
+Tips:
+Org Beamer reference card https://github.com/fniessen/refcard-org-beamer
+
+- *set font size*
+  #+latex: {}{\small
+  multiple
+  lines
+  #+latex: }
+
+  #+latex: \small single-line
+
+  for list items:
+  #+latex: \setbeamerfont{itemize/enumerate body}{size=\footnotesize}
+  #+latex: \setbeamerfont{itemize/enumerate subbody}{size=\scriptsize}
+  #+latex: \setbeamerfont{itemize/enumerate subsubbody}{size=\tiny}
+
+- *set height of image*
+  #+ATTR_LaTeX: :height 0.9\textheight
+  [[./path/to/image.png]]
+
+- *A turorial*
+  https://home.uncg.edu/cmp/reu/presentations/Charles%20Batts%20-%20Beamer%20Tutorial.pdf
+
+- *auto break to multiple frames*
+  ** A very long "frame" with breaks
+  :PROPERTIES:
+  :BEAMER_opt: allowframebreaks,label=
+  :END:
+
+  全局
+  #+BIND: org-beamer-frame-default-options "allowframebreaks"
+  需要(setq org-export-allow-bind-keywords t)
+  不需要break的frame不要加编号：\setbeamertemplate{frametitle continuation}[singleframecheck]
+
+- 手动在合适位置拆分成多张幻灯片
+  #+BEAMER: \framebreak
+
+#+END_COMMENT

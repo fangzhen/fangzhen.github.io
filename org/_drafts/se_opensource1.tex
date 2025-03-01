@@ -1,0 +1,325 @@
+% Created 2024-07-03 Wed 17:38
+% Intended LaTeX compiler: xelatex
+\documentclass{beamer}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{ctex}
+\usetheme{default}
+\usetheme{default}
+\date{}
+\title{软件工程分享}
+\AtBeginSection[]{\begin{frame}<beamer>\frametitle{目录}\tableofcontents[currentsection]\end{frame}}
+\hypersetup{
+ pdfauthor={},
+ pdftitle={软件工程分享},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.6.15)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+
+\section{似乎挺简单}
+\label{sec:org903aa3f}
+\begin{frame}[label={sec:orgba8d112}]{软件开发流程示例}
+\begin{center}
+\includegraphics[height=0.9\textheight]{../assets/static/opensource/workflow.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orga4e2a95}]{何谓工程}
+\begin{itemize}
+\item 注重实践和实际应用
+\item 系统化的思维
+\begin{itemize}
+\item 模型和抽象
+\end{itemize}
+\item 跨学科协作和组织
+\item 项目管理
+\begin{itemize}
+\item 用户和需求驱动
+\item 时间/人员规划
+\item 质量控制
+\item 规范化流程
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orge3ea6ba}]{开源软件中的软件工程实例}
+\begin{center}
+\begin{tabular}{lll}
+\hline
+ & Linux Kernel & Openstack\\[0pt]
+\hline
+模块化设计 & 内核子系统；驱动 & 计算、网络、存储等模块\\[0pt]
+\hline
+版本控制 & Git & Git\\[0pt]
+\hline
+代码审查 & 邮件列表 & Gerrit\\[0pt]
+\hline
+自动化测试 & LKDTM, LTP等 & tox, rally等\\[0pt]
+\hline
+持续集成 & kernel CI等 & Zuul，Gerrit等\\[0pt]
+\hline
+文档 & 自动构建 & 自动构建\\[0pt]
+\hline
+项目管理 & Linux基金会 & Openstack基金会\\[0pt]
+\hline
+需求管理 & 邮件列表 & Blueprint\\[0pt]
+\hline
+代码行数 & 3000万 & 主要项目 130万\\[0pt]
+\hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+\section{但还是会翻车}
+\label{sec:orgdf5eb7d}
+\begin{frame}[label={sec:orgbb1d90a}]{案例：VCF软件项目 - 概述}
+\begin{itemize}
+\item 属于Trilogy项目的一部分，开发一套软件提高信息处理和共享能力，并实现无纸化办公作业。
+\item 历时5年开发，总共耗资1.7亿美元
+\item 项目需求数度剧变，历任四任CIO
+\item 最终项目完全无法使用
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org1fd8f26}]{过程}
+\begin{itemize}
+\item 立项
+\begin{itemize}
+\item 时间：2001年6月
+\item 目标：升级案件文档管理系统
+\item 计划三年，预算1400万美元
+\end{itemize}
+\item 需求变化
+\begin{itemize}
+\item 开始一年之内，需求从升级变成重新开发
+\item 预算增加，时间延长
+\item 利好软件承包商 SAIC 公司
+\end{itemize}
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org97a1a3b}]{过程}
+\begin{itemize}
+\item 混乱：NRC对VCF项目出具的评估报告显示：该项目的开发工作一片混乱，可能从开发伊始就缺乏整体规划。甚至是在项目完工日期之后的几个月，仍然存在下列明显的问题：
+\begin{itemize}
+\item 探员无法通过该系统将案件资料带到现场进行参考。
+\item 系统缺乏最基本的人性化操作特性，连书签和历史记录功能都没有，难以查找有用的资料
+\item 系统的排序功能不正常
+\item 系统在上线前几乎没有做过测试，上线成败与否完全是随机的
+\item 对系统上线可能失败的情况没有做预案，整个系统的上线计划就是一场豪赌。一旦系统上线失败，将彻底失去信息化运作能力。
+\end{itemize}
+\item 试图挽回
+\begin{itemize}
+\item 2004年6月，雇佣另一家软件研发公司试图修正项目
+\item 该公司出具的报告显示项目已无法挽回
+\item 2005年正式宣告失败
+\end{itemize}
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:orgaae2dc2}]{失败原因}
+\begin{itemize}
+\item 项目从一开始就缺乏完整的构思，从而导致架构设计的失败
+\item 频繁的需求变更
+\item 项目管理上频繁往复，导致系统规格混乱
+\item 对具体软件开发人员管理过于死板
+\item 项目中的很多经理级别管理人员，缺乏基本的计算机科学背景，造成外行领导内行，甚至干扰项目的进行
+\item 项目进度严重滞后的情况下，依然不停地添加新的需求
+\item 项目需求变更和范围扩大导致的代码膨胀问题
+\item 奢望项目能够快速上线投入使用，造成项目无法通过使用磨合提高软件的可用性
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org7691d18}]{启示}
+\begin{itemize}
+\item 一个软件项目的成败因素是多方面的
+\item 明确需求与管理变更
+\item 有效的项目管理
+\item 技术评估与选择
+\item 选择合适的开发模型
+\item 供应商管理
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org418e190}]{案例：XZ Utils后门事件 - 概述}
+\begin{itemize}
+\item XZ Utils项目概述
+\begin{itemize}
+\item 是.xz文件格式的实现，基于lzma算法，在Linux系统中有着非常广泛的应用
+\item 项目维护者Lasse Collin
+\end{itemize}
+\end{itemize}
+
+后门基本信息：
+\begin{itemize}
+\item CVE-2024-3094
+\item XZ Utils 5.6.0和5.6.1的发布tar包包含后门。这些tar包由Jia Tan创建并签名
+\item 攻击者即使没有有效账号，也能通过sshd登陆系统
+\item 具体攻击细节仍在调查中
+\item 进入了Debian和Fedora的测试版本
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org41e83f7}]{发现过程}
+\begin{itemize}
+\item 最初发现该问题的是 Postgres 数据库的维护者之一 Andres Freund。
+\begin{itemize}
+\item 不是专门的安全研究员
+\item 来自微软
+\end{itemize}
+\item 在 Debian 测试版本测试 Postgres 时发现了 openssh-server 的性能问题
+\begin{itemize}
+\item 登陆时CPU占用高
+\item 登陆时间慢了0.5s左右
+\end{itemize}
+\item 几周的调查之后，基本弄清楚来龙去脉
+\begin{itemize}
+\item 经过精心设计的供应链投毒
+\end{itemize}
+\end{itemize}
+
+\url{https://www.openwall.com/lists/oss-security/2024/03/29/4}
+\end{frame}
+
+\begin{frame}[label={sec:orgc396379}]{后门植入时间线}
+\begin{itemize}
+\item 2021 JiaTan Github账号建立，11.16在libarchive提交了第一个PR
+\item 之后两年，陆续在xz等项目提交代码，代码质量看起来还比较高
+\item 期间有多个不同邮件地址向XZ项目维护者施压，最终JinTan取得了XZ项目的权限
+\item 2024年2月23日，Jia Tan将隐藏的后门二进制代码合并到一些二进制测试输入文件中。
+\item 2024年2月24日：Jia Tan标记并构建v5.6.0，并发布带有额外恶意build-to-host.m4的xz-5.6.0.tar.gz发行版。
+\begin{itemize}
+\item 这个m4文件不存在于源代码库中，但打包过程中另外其他合法文件也被添加了，因此它本身并不可疑。但脚本已被改动，添加了后门。
+\end{itemize}
+\item 5.6.0 版本被发现有ifunc漏洞，该漏洞似乎与攻击无关。
+\item 但是发行版另外一些可能修改使得5.6.0中的后门可能失效，JiaTan加速发布了可能包含新后门的5.6.1版本。
+\item JiaTan推动新版本进入各大发行版。
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org11734ec}]{}
+\begin{center}
+\includegraphics[height=0.9\textheight]{../assets/static/opensource/xz-backdoor.jpg}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orgcd3d7a1}]{后续}
+\begin{itemize}
+\item 漏洞被公开后，Lasse和JiaTan的Github账户被暂停。Lasse的账户后来恢复
+\item 各大发行版撤下有问题的版本，并发布新版本的包
+\item xz项目的官网，邮件列表等去除JiaTan的权限或回退到JiaTan无权限的备份
+\item xz源码的Github仓库没有强制push，也就是JiaTan的提交还保留在Git历史中
+\begin{itemize}
+\item 但是触发build后门的代码没有包含在其中
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orgc1141ae}]{启示}
+\begin{itemize}
+\item 开源软件维护的难度
+\item 代码审查的重要性
+\item 软件中的小瑕疵带来的影响可能很大
+\item 软件工程实践可能在其中发挥作用
+\item 开源是提供安全软件的有效途径
+\begin{itemize}
+\item With enough eyes,all bugs are shallow.（足够多的关注能让所有问题浮现）- Linus
+\end{itemize}
+\item 没有完美方案
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org5d5cfa5}]{}
+\begin{center}
+\includegraphics[height=\textheight]{../assets/static/opensource/fragile.png}
+\end{center}
+\end{frame}
+
+\section{云计算与软件工程}
+\label{sec:org9931830}
+\begin{frame}[label={sec:orga21baaa}]{云计算为软件工程提供支撑}
+\begin{itemize}
+\item 开发与部署环境：
+\begin{itemize}
+\item 云计算提供了灵活的开发和部署环境，开发人员可以随时随地访问和使用计算资源。
+\item Online IDE可以更方便标准化配置，提高安全性。
+\end{itemize}
+
+\item CICD：
+\begin{itemize}
+\item 利用云平台提供的能力，开发团队可以更高效地进行持续集成和持续交付（CI/CD）
+\end{itemize}
+
+\item 协作和管理：
+\begin{itemize}
+\item 集成的协作工具和平台，如GitHub、Bitbucket和Jira，支持分布式团队的协作开发。
+\end{itemize}
+
+\item 专注核心功能与组件
+\begin{itemize}
+\item 通过利用各种云服务，降低开发者的心智负担
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org7dab50f}]{云计算为软件工程提供支撑}
+\begin{itemize}
+\item 资源管理：
+\begin{itemize}
+\item 通过虚拟化技术提供按需资源分配，用户可以根据需要动态调整计算资源的使用。
+\end{itemize}
+
+\item 成本效益：
+\begin{itemize}
+\item 通过按需付费和资源共享，显著降低了硬件和维护成本。
+\end{itemize}
+
+\item 安全与合规：
+\begin{itemize}
+\item 提供了各种安全服务，如身份验证、数据加密和合规性管理，帮助用户保护数据和应用安全。
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org539f051}]{云计算本身就是一种软件工程实践}
+云计算产品
+\begin{itemize}
+\item 以开源生态为基础
+\begin{itemize}
+\item Linux, Kubernetes, Openstack, Ceph, Qemu, Openvswitch etc.
+\item 全球协作
+\end{itemize}
+\item 商业公司提供产品化方案
+\end{itemize}
+
+软件工程在云计算软件开发中发挥着关键作用
+\begin{itemize}
+\item 通过软件工程的系统性思维来解决产品化过程中的问题
+\item 着眼于整个产品和方案，而不只是具体的代码实现
+\item 可维护性是软件生命周期的一个重要而关键的阶段
+\end{itemize}
+
+两者互相促进，提升现代软件开发的效率和效果
+\end{frame}
+
+\begin{frame}[label={sec:org092c6da}]{}
+\begin{center}
+\Huge Thank You!
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org4b9fd88}]{}
+\begin{center}
+\Huge Q\&A
+\end{center}
+\end{frame}
+\end{document}

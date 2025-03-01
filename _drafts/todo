@@ -72,10 +72,10 @@ https://blog.gingerlime.com/2011/django-memory-leaks-part-i/
 
 EAS-57616
 
+https://docs.kernel.org/filesystems/ramfs-rootfs-initramfs.html: 对ramfs rootfs initramfs讲的比较清晰，虽然时间比较早05年，2.6内核。
 
 pxe启动过程 initrd 启动过程内存layout等
 https://landley.net/writing/rootfs-intro.html
-https://www.kernel.org/doc/Documentation/filesystems/ramfs-rootfs-initramfs.txt
 https://wiki.osdev.org/Detecting_Memory_(x86)
 http://deltamaster.is-programmer.com/posts/37297.html
 https://web.archive.org/web/20110524083740/http://download.intel.com/design/archives/wfm/downloads/pxespec.pdf
@@ -134,12 +134,6 @@ https://www.kernel.org/doc/Documentation/x86/x86_64/mm.txt
 linux中 对TSS的使用 https://blog.csdn.net/rikeyone/article/details/110507911
 http://liujunming.top/2020/01/18/%E6%B5%85%E8%B0%88tss/
 ldt etc https://stackoverflow.com/questions/38600901/ldt-and-paging-in-linux-for-x86-processors
-
-linux 页表建立
-https://blog.csdn.net/whenloce/article/details/88831089
-https://blog.csdn.net/faxiang1230/article/details/106205110
-https://blog.csdn.net/bullbat/article/details/7175125 - 页表初始化过程
-https://chyyuu.gitbooks.io/ucore_os_docs/content/lab0/lab0_2_3_1_2_att_asm.html - AT&T 语法
 
 efistub
 https://cloud.tencent.com/developer/article/1645885
@@ -220,6 +214,15 @@ font
 https://en.wikipedia.org/wiki/Computer_font
 https://freetype.org/freetype2/docs/ft2faq.html
 https://wiki.archlinux.org/title/font_configuration
+[Linux fontconfig 的字体匹配机制](https://catcat.cc/post/2020-10-31/) fontconfig的基本原理，如何起作用
+https://fontconfig.pages.freedesktop.org/fontconfig/fontconfig-user.html fontconfig 文档
+
+查看某个字符对应的字体
+python -c 'c=ord("中"); print(f"U+{c:X}")'  #  -> U+4E2D
+fc-list ':charset=4E2D'
+fc-match -s ':charset=4E2D'
+
+emacs使用fontset来给不同字符设置字体 https://www.gnu.org/software/emacs/manual/html_node/emacs/Fontsets.html
 
 performance:
 https://easyperf.net/blog/2018/06/01/PMU-counters-and-profiling-basics 关于PMU的很好的入门介绍：事件计数，采样的基本实现

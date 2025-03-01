@@ -7,7 +7,8 @@ update: 2023-06-14
 ---
 本文主要描述x86_64架构下，UEFI的OSLoader从启动如何一步步做到执行用户空间执行代码。核心是内存分段/分页管理与特权级切换。
 
-> 测试环境使用qemu虚拟机。对应代码为[blog/userspace](https://github.com/fangzhen/timetomb/tree/blog/userspace)
+* TOC
+{:toc}
 
 ## Overview
 把kernel直接构建为UEFI Image，通过UEFI firmware直接加载执行。本文主要包括一下几个步骤：

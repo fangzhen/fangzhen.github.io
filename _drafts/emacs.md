@@ -107,6 +107,9 @@ https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-dot.html
 
 
 ### beamer制作幻灯片
+
+M-x: org-beamer-export-to-pdf
+
 org-mode导出pdf 中文：以下两个配置 https://emacs-china.org/t/topic/2540/12
 #+LATEX_HEADER: \usepackage{ctex}
 #+latex_compiler: xelatex
