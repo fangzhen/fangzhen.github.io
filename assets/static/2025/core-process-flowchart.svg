@@ -1,0 +1,172 @@
+<svg viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1000" height="800" fill="#f8f9fa" rx="10" ry="10"/>
+  
+  <!-- Title -->
+  <text x="500" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#333">冬季康养旅居平台 - 核心流程图</text>
+  <text x="500" y="70" font-family="Arial, sans-serif" font-size="18" text-anchor="middle" fill="#666">Winter Wellness Accommodation Platform - Core Process</text>
+  
+  <!-- Section: User Flow -->
+  <rect x="50" y="100" width="300" height="600" fill="#e6f3ff" rx="10" ry="10" stroke="#4a86e8" stroke-width="2"/>
+  <text x="200" y="130" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#333">用户端流程</text>
+  <text x="200" y="155" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#666">User Flow</text>
+  
+  <!-- User Flow Steps -->
+  <g transform="translate(80, 180)">
+    <rect x="0" y="0" width="240" height="50" fill="#4a86e8" rx="5" ry="5"/>
+    <text x="120" y="25" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">用户注册/登录</text>
+    <text x="120" y="43" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">User Registration/Login</text>
+    
+    <rect x="0" y="70" width="240" height="50" fill="#4a86e8" rx="5" ry="5"/>
+    <text x="120" y="95" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">浏览搜索房源</text>
+    <text x="120" y="113" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Browse   Search Properties</text>
+    
+    <rect x="0" y="140" width="240" height="50" fill="#4a86e8" rx="5" ry="5"/>
+    <text x="120" y="165" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">选择日期和价格确认</text>
+    <text x="120" y="183" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Select Dates   Confirm Price</text>
+    
+    <rect x="0" y="210" width="240" height="50" fill="#4a86e8" rx="5" ry="5"/>
+    <text x="120" y="235" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">订单确认及支付</text>
+    <text x="120" y="253" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Order Confirmation   Payment</text>
+    
+    <rect x="0" y="280" width="240" height="50" fill="#4a86e8" rx="5" ry="5"/>
+    <text x="120" y="305" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">入住</text>
+    <text x="120" y="323" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Check-in</text>
+    
+    <rect x="0" y="350" width="240" height="50" fill="#4a86e8" rx="5" ry="5"/>
+    <text x="120" y="375" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">入住完成</text>
+    <text x="120" y="393" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Check-out</text>
+    
+    <rect x="0" y="420" width="240" height="50" fill="#4a86e8" rx="5" ry="5"/>
+    <text x="120" y="445" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">评价订单</text>
+    <text x="120" y="463" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Rate  Review</text>
+    
+    <!-- Arrows -->
+    <line x1="120" y1="50" x2="120" y2="70" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <line x1="120" y1="120" x2="120" y2="140" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <line x1="120" y1="190" x2="120" y2="210" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <line x1="120" y1="260" x2="120" y2="280" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <line x1="120" y1="330" x2="120" y2="350" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <line x1="120" y1="400" x2="120" y2="420" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  </g>
+  
+  <!-- Section: Merchant Flow -->
+  <rect x="370" y="100" width="300" height="600" fill="#e6ffe6" rx="10" ry="10" stroke="#6aa84f" stroke-width="2"/>
+  <text x="520" y="130" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#333">商家端流程</text>
+  <text x="520" y="155" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#666">Merchant Flow</text>
+  
+  <!-- Merchant Flow Steps -->
+  <g transform="translate(400, 180)">
+    <rect x="0" y="0" width="240" height="50" fill="#6aa84f" rx="5" ry="5"/>
+    <text x="120" y="25" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">商家注册/登录</text>
+    <text x="120" y="43" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Merchant Registration/Login</text>
+    
+    <rect x="0" y="70" width="240" height="50" fill="#6aa84f" rx="5" ry="5"/>
+    <text x="120" y="95" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">提交商家资质</text>
+    <text x="120" y="113" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Submit Business Qualifications</text>
+    
+    <rect x="0" y="140" width="240" height="50" fill="#6aa84f" rx="5" ry="5"/>
+    <text x="120" y="165" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">房源管理</text>
+    <text x="120" y="183" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Property Management</text>
+    
+    <rect x="0" y="210" width="240" height="50" fill="#6aa84f" rx="5" ry="5"/>
+    <text x="120" y="235" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">订单管理</text>
+    <text x="120" y="253" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Order Management</text>
+    
+    <rect x="0" y="280" width="240" height="50" fill="#6aa84f" rx="5" ry="5"/>
+    <text x="120" y="305" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">处理退款请求</text>
+    <text x="120" y="323" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Process Refund Requests</text>
+    
+    <rect x="0" y="350" width="240" height="50" fill="#6aa84f" rx="5" ry="5"/>
+    <text x="120" y="375" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">查看待结算金额</text>
+    <text x="120" y="393" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">View Pending Settlement</text>
+    
+    <rect x="0" y="420" width="240" height="50" fill="#6aa84f" rx="5" ry="5"/>
+    <text x="120" y="445" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">申请提现</text>
+    <text x="120" y="463" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Request Withdrawal</text>
+    
+    <!-- Arrows -->
+    <line x1="120" y1="50" x2="120" y2="70" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <line x1="120" y1="120" x2="120" y2="140" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <line x1="120" y1="190" x2="120" y2="210" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <line x1="120" y1="260" x2="120" y2="280" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <line x1="120" y1="330" x2="120" y2="350" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <line x1="120" y1="400" x2="120" y2="420" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  </g>
+  
+  <!-- Section: Admin Flow -->
+  <rect x="690" y="100" width="300" height="600" fill="#fff2e6" rx="10" ry="10" stroke="#e69138" stroke-width="2"/>
+  <text x="840" y="130" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#333">管理员后台流程</text>
+  <text x="840" y="155" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#666">Admin Flow</text>
+  
+  <!-- Admin Flow Steps -->
+  <g transform="translate(720, 180)">
+    <rect x="0" y="0" width="240" height="50" fill="#e69138" rx="5" ry="5"/>
+    <text x="120" y="25" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">审核商家资质</text>
+    <text x="120" y="43" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Review Merchant Qualifications</text>
+    
+    <rect x="0" y="70" width="240" height="50" fill="#e69138" rx="5" ry="5"/>
+    <text x="120" y="95" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">标记政府认证房源</text>
+    <text x="120" y="113" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Mark Government-certified Properties</text>
+    
+    <rect x="0" y="140" width="240" height="50" fill="#e69138" rx="5" ry="5"/>
+    <text x="120" y="165" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">审核房源信息</text>
+    <text x="120" y="183" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Review Property Information</text>
+    
+    <rect x="0" y="210" width="240" height="50" fill="#e69138" rx="5" ry="5"/>
+    <text x="120" y="235" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">处理退款申请</text>
+    <text x="120" y="253" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Process Refund Applications</text>
+    
+    <rect x="0" y="280" width="240" height="50" fill="#e69138" rx="5" ry="5"/>
+    <text x="120" y="305" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">处理商家提现</text>
+    <text x="120" y="323" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Process Merchant Withdrawals</text>
+    
+    <rect x="0" y="350" width="240" height="50" fill="#e69138" rx="5" ry="5"/>
+    <text x="120" y="375" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">用户管理</text>
+    <text x="120" y="393" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">User Management</text>
+    
+    <rect x="0" y="420" width="240" height="50" fill="#e69138" rx="5" ry="5"/>
+    <text x="120" y="445" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">内容管理</text>
+    <text x="120" y="463" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Content Management</text>
+    
+    <!-- Arrows -->
+    <line x1="120" y1="50" x2="120" y2="70" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <line x1="120" y1="120" x2="120" y2="140" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <line x1="120" y1="190" x2="120" y2="210" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <line x1="120" y1="260" x2="120" y2="280" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <line x1="120" y1="330" x2="120" y2="350" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <line x1="120" y1="400" x2="120" y2="420" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  </g>
+  
+  <!-- Cross-flow Connections -->
+  <!-- Admin reviews merchant qualifications -->
+  <path d="M400 210 C350 210, 350 180, 300 180" stroke="#999" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+  
+  <!-- User payment connects to merchant order -->
+  <path d="M320 285 C350 285, 350 310, 400 310" stroke="#999" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+  
+  <!-- Merchant refund request to admin processing -->
+  <path d="M640 315 C670 315, 670 235, 720 235" stroke="#999" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+  
+  <!-- Merchant withdrawal to admin processing -->
+  <path d="M640 455 C670 455, 670 305, 720 305" stroke="#999" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+  
+  <!-- Arrow Marker Definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+  </defs>
+  
+  <!-- Legend -->
+  <g transform="translate(200, 720)">
+    <rect x="0" y="0" width="600" height="60" fill="white" rx="5" ry="5" stroke="#ccc" stroke-width="1"/>
+    <text x="300" y="25" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">核心流程说明 (Core Process Legend)</text>
+    
+    <line x1="100" y1="40" x2="150" y2="40" stroke="#333" stroke-width="2"/>
+    <text x="170" y="45" font-family="Arial, sans-serif" font-size="14" fill="#333">直接流程 (Direct Flow)</text>
+    
+    <line x1="300" y1="40" x2="350" y2="40" stroke="#999" stroke-width="2" stroke-dasharray="5,5"/>
+    <text x="370" y="45" font-family="Arial, sans-serif" font-size="14" fill="#333">跨角色交互 (Cross-role Interaction)</text>
+  </g>
+</svg>

@@ -198,6 +198,7 @@ int syscall process etc.
 
 python asyncio
 https://realpython.com/async-io-python/
+https://www.blog.pythonlibrary.org/2016/07/26/python-3-an-intro-to-asyncio/
 
 async/await vs greenthread
 编码时是否要对库中的协程/greenthread了解？

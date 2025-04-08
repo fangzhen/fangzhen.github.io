@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# 检查是否接收到文件名参数
+if [ -z "$1" ]; then
+  echo "用法: $0 <markdown文件名>"
+  exit 1
+fi
+
+input_path="$1"
+
+# 提取目录和文件名
+input_dir=$(dirname "$input_path")
+input_file=$(basename "$input_path")
+output_file="${input_file%.md}.pdf"
+
+# 如果输入路径不为空且不是当前目录，则切换到该路径
+if [ -n "$input_dir" ] && [ "$input_dir" != "." ]; then
+  cd "$input_dir" || exit 1
+fi
+
+# 执行 pandoc 命令
+pandoc -f gfm --pdf-engine=xelatex \
+       -V CJKmainfont='Noto Serif CJK SC' \
+       -V geometry:margin=1in \
+       -V linestretch:1.2 \
+       --metadata date="" \
+       "$input_file" -o "$output_file"
+
+echo "Generated '$(pwd)/$output_file'"
+
+# 如果切换了目录，最好再切换回来（可选）
+if [ -n "$input_dir" ] && [ "$input_dir" != "." ]; then
+  cd - > /dev/null 2>&1 # 返回上一次所在的目录，忽略输出和错误
+fi

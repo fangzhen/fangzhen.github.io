@@ -1,4 +1,4 @@
-% Created 2024-12-13 Fri 10:20
+% Created 2025-03-13 Thu 14:05
 % Intended LaTeX compiler: xelatex
 \documentclass[presentation]{beamer}
 \usepackage{graphicx}
@@ -6,35 +6,32 @@
 \usepackage{wrapfig}
 \usepackage{rotating}
 \usepackage[normalem]{ulem}
-\usepackage{amsmath}
-\usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
 \usepackage{ctex}
 \usepackage{hyperref}
+\usepackage{newunicodechar}
+\newunicodechar{​}{\ignorespaces} % 忽略零宽空格
 \hypersetup{bookmarksdepth = 3}
 \usetheme{Hannover}
 \usecolortheme{seahorse}
 \date{}
 \title{读书笔记}
-\subtitle{操作系统：原理与实践}
-\AtBeginSubsection[]{\begin{frame}\frametitle{}\setcounter{tocdepth}{2}\tableofcontents[currentsubsection,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]\end{frame}}
+\subtitle{操作系统：原理与实践 - 第一卷 内核与进程}
+\AtBeginSection[]{\begin{frame}\frametitle{}\setcounter{tocdepth}{2}\tableofcontents[currentsection,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]\end{frame}}
 \hypersetup{
  pdfauthor={},
  pdftitle={读书笔记},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 29.4 (Org mode 9.6.15)}, 
+ pdfcreator={Emacs 30.1 (Org mode 9.7.11)}, 
  pdflang={English}}
 \begin{document}
 
 \maketitle
-
-\section{第一卷 内核与进程}
-\label{sec:orga77bb8d}
-\subsection{引言}
-\label{sec:org14c0d42}
-\begin{frame}[label={sec:org0381675}]{引言}
+\section{引言}
+\label{sec:org1862e91}
+\begin{frame}[label={sec:orgd9f1a55}]{引言}
 考虑一个Web server，操作系统的部分工作是使得开发类似web server这样的应用更加容易。从Web server的角度，操作系统可能要提供一些支持，比如：
 \begin{itemize}
 \item Web server需要访问文件或调用外部程序计算并获取结果 - 操作系统怎么让不同的应用互相通信？
@@ -42,12 +39,10 @@
 \item 随着业务增长，web server可能要部署在其他硬件上 - 操作系统如何屏蔽硬件差异，以避免重写web server？
 \end{itemize}
 \end{frame}
-
-\begin{frame}[label={sec:org083b705}]{操作系统定义}
+\begin{frame}[label={sec:orga286c9a}]{操作系统定义}
 操作系统是一个软件层，管理计算机资源，为用户及其应用程序提供服务。
 \end{frame}
-
-\begin{frame}[label={sec:org6939fdc}]{操作系统角色}
+\begin{frame}[label={sec:org47243d4}]{操作系统角色}
 操作系统作为硬件与应用的中间层，需要扮演三个角色：
 \begin{itemize}
 \item 裁判（Referee）：资源共享。应用共享硬件资源，需要操作系统决定资源何时分配给哪个应用。
@@ -55,8 +50,7 @@
 \item 粘合剂（Glue）：为应用程序提供公共服务或组件，例如文件系统、统一的用户界面观感、IO。
 \end{itemize}
 \end{frame}
-
-\begin{frame}[label={sec:orgdf33c4c}]{其他系统的类似角色}
+\begin{frame}[label={sec:orgddf1700}]{其他系统的类似角色}
 除了操作系统，很多其他系统也有类似的设计挑战，比如，云计算、浏览器、数据库系统、互联网。以云计算为例：
 \begin{itemize}
 \item Referee：资源在云上不同应用之间如何分配？
@@ -64,8 +58,7 @@
 \item Glue：云上服务通常跨主机运行。云软件需要提供那些服务来协调不同的服务以及共享数据？
 \end{itemize}
 \end{frame}
-
-\begin{frame}[label={sec:org4bf7c15}]{操作系统评估标准：}
+\begin{frame}[label={sec:org0a059ef}]{操作系统评估标准：}
 \begin{itemize}
 \item 可靠性和可用性：系统是否按照预期运行及其运行时间比例。
 \item 安全性：是否能够防止恶意攻击及保护用户数据隐私。
@@ -74,8 +67,7 @@
 \item 流行度：应用程序、硬件、用户生态。
 \end{itemize}
 \end{frame}
-
-\begin{frame}[label={sec:orgd9b17cf}]{操作系统：过去现在与未来}
+\begin{frame}[label={sec:orgf3da491}]{操作系统：过去现在与未来}
 \begin{itemize}
 \item 早期操作系统：操作系统主要是通过提供一些公共服务（如标准IO程序）来减少编程错误。
 \item 批处理操作系统
@@ -93,11 +85,10 @@
 \end{itemize}
 \end{itemize}
 \end{frame}
+\section{内核抽象}
+\label{sec:orgbd1f7bb}
 
-\subsection{内核抽象}
-\label{sec:orgc85c8e1}
-
-\begin{frame}[label={sec:org6c2884d}]{概述}
+\begin{frame}[label={sec:orgbaafc44}]{概述}
 \begin{itemize}
 \item 操作系统的一个核心角色是保护——把misbehaving的程序和用户隔离开来，以避免影响其他应用或操作系统本身。
 \item 保护是实现某些操作系统其他目标的基础。如安全性、可靠性、隐私、公平资源分配。
@@ -105,8 +96,7 @@
 \item 这种设计模式——可扩展的程序运行第三方脚本——在其他领域也有很多，比如浏览器。
 \end{itemize}
 \end{frame}
-
-\begin{frame}[label={sec:org2dc6fad}]{进程抽象}
+\begin{frame}[label={sec:org96be17f}]{进程抽象}
 \begin{itemize}
 \item 进程是程序运行实例，
 \begin{itemize}
@@ -127,8 +117,7 @@
 \item 本章只讨论简单的单线程进程
 \end{itemize}
 \end{frame}
-
-\begin{frame}[label={sec:orga9108a9}]{进程保护}
+\begin{frame}[label={sec:orgcd3c170}]{进程保护}
 操作系统如何防止进程危害其他进程或者操作系统本身？
 \begin{itemize}
 \item 不考虑性能，一个假想的方案：由内核来执行用户进程的指令。
@@ -158,8 +147,7 @@
 \end{itemize}
 \end{itemize}
 \end{frame}
-
-\begin{frame}[label={sec:org1e7603f}]{模式切换}
+\begin{frame}[label={sec:org33f0830}]{模式切换}
 \begin{itemize}
 \item 用户态到内核态
 \begin{itemize}
@@ -176,8 +164,7 @@
 \end{itemize}
 \end{itemize}
 \end{frame}
-
-\begin{frame}[label={sec:org11e5cd8}]{实现安全的模式切换}
+\begin{frame}[label={sec:orga8fdd9c}]{实现安全的模式切换}
 \begin{itemize}
 \item context switch 的实现至少应该满足：
 \begin{itemize}
@@ -194,8 +181,7 @@
 \end{itemize}
 \end{itemize}
 \end{frame}
-
-\begin{frame}[label={sec:orge3d20f7}]{具体实现}
+\begin{frame}[label={sec:org4531dd6}]{具体实现}
 \begin{itemize}
 \item x86中断处理的模式切换
 \item 系统调用的实现
@@ -203,11 +189,158 @@
 \item 实现upcall
 \end{itemize}
 \end{frame}
-
-\begin{frame}[label={sec:orge3259b9}]{Case Study}
+\begin{frame}[label={sec:orgb51eb89}]{Case Study}
 \begin{itemize}
 \item 从BIOS到bootloader到Kernel启动过程
 \item 虚拟机
+\end{itemize}
+\end{frame}
+\section{编程接口}
+\label{sec:org87a8eef}
+\begin{frame}[label={sec:org86cbb9d}]{概述 - 如何使用进程抽象}
+\begin{itemize}
+\item 操作系统给应用提供的功能，包括
+\begin{itemize}
+\item 进程管理
+\item IO
+\item 线程管理
+\item 内存管理
+\item 存储与文件系统
+\item 网络
+\item 图形接口与窗口管理
+\item 认证与安全
+\end{itemize}
+\item 这些也是本章及本书接下来的核心: \alert{从进程抽象出发，探讨操作系统设计的原则与实践}
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org4bb5f11}]{概述 - 操作系统的组织}
+\begin{itemize}
+\item 这些功能在哪实现（kernel还是用户库）
+\begin{itemize}
+\item 用户态程序：如用户登陆管理
+\item 用户态链接库：如窗口组件
+\item kernel中，通过syscall访问：如进程调度、内存管理
+\item kernel启动的内核态进程：如很多系统中的窗口管理
+\end{itemize}
+\item 权衡：
+\begin{itemize}
+\item 灵活性
+\item 可靠性
+\item 性能
+\item 安全性
+\end{itemize}
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org618af29}]{进程管理}
+\begin{itemize}
+\item 早期批处理系统中，完全由kernel来管理进程
+\begin{itemize}
+\item 用户提交任务，操作系统在合适的时间初始化并启动进程
+\end{itemize}
+\item 现代操作系统中，允许用户程序来创建和管理它们自己的进程
+\begin{itemize}
+\item 如Shell、Web服务器、窗口管理器、浏览器、数据库、编译器等等
+\item 每个用户程序管理按自己的逻辑管理进程，例如
+\begin{itemize}
+\item Web服务器主进程监听请求，子进程处理请求
+\item Shell运行用户输入的命令，还可以提供一些任务管理功能
+\end{itemize}
+\end{itemize}
+\item 内核提供基本的进程管理相关的系统调用
+\begin{itemize}
+\item Windows: `CreateProcess`
+\item UNIX: `fork` \& `exec`
+\end{itemize}
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org6a13c86}]{输入/输出}
+\begin{itemize}
+\item IO设备多种多样：例如键盘、鼠标、显示器、磁盘、以太网卡等
+\item 选择1：给每种设备提供对应的编程接口
+\begin{itemize}
+\item 问题：一旦有新的设备类型，就需要提供新的系统调用
+\end{itemize}
+\item UNIX的一个主要创新是通过单一的通用接口统一所有设备输入输出。UNIX IO接口的基本思想如下：
+\begin{itemize}
+\item 统一：所有文件操作、设备IO、进程间通信都使用同一套系统调用：`open`, `close`, `read`, `write`。
+\item 使用前先open
+\item 面向字节
+\item 内核缓冲读写：块设备或流设备的读写都需要经过内核，使得读写接口保持一致。使读写操作与具体设备解耦。
+\item 显式close
+\end{itemize}
+\item 要实现进程间通信，还需要几个概念：
+\begin{itemize}
+\item 管道：管道是内核缓冲，一个进程写入管道，另一个进程读取，从而实现通信。
+\item IO重定向：标准输入输出+IO重定向可以使得进程不必关心输入/输出对应的实际文件。
+\item IO多路复用：当server/client模式下，server通过多个pipe与多个client相连时。
+\end{itemize}
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org5808af7}]{案例研究}
+\begin{itemize}
+\item Shell实现
+\begin{itemize}
+\item 上面的IO模型使得实现以下行为更为简单：
+\begin{itemize}
+\item 程序可以是包含命令的文件（shell脚本）：shell解释器不需要区分键盘键入的命令还是从文件读入的命令。
+\item 程序可以使用文件作为标准输入/输出：标准输入/输出+IO重定向
+\item 通过管道连接两个程序，实现生产者/消费者模型
+\end{itemize}
+\end{itemize}
+\item 进程间通信：几个普遍使用的进程间通信方式都与IO模型紧密相关：
+\begin{itemize}
+\item 生产者-消费者：管道
+\item 客户端-服务器：客户端与服务器都是通过IO 接口与kernel交互来读写。
+\item 文件系统
+\end{itemize}
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:orga245bd2}]{操作系统结构}
+操作系统要提供很多功能，有些需要在内核中实现，有些可以放在用户态实现（比如上面的shell）。
+操作系统不同模块之间的交互也有很多，例如
+\begin{itemize}
+\item 很多模块依赖同步原语
+\item 虚拟内存管理模块依赖硬件的地址翻译
+\item 文件系统和内存管理共享物理内存；它们可能都依赖磁盘驱动
+\end{itemize}
+
+因此操作系统设计需要权衡，更多在在kernel中实现
+\begin{itemize}
+\item 有助于提高性能，以及模块间更好地集成
+\item 但也会更不灵活、难以修改。
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org65c2af2}]{操作系统结构}
+\begin{itemize}
+\item 宏内核
+\begin{itemize}
+\item 广泛使用的商用内核大部分选择宏内核，包括Windows, Linux, MacOS
+\item 为了提高可移植性，大部分现代操作系统的硬件管理都包含两个特性：
+\begin{itemize}
+\item 硬件抽象层
+\item 驱动动态加载
+\end{itemize}
+\end{itemize}
+\item 微内核
+\begin{itemize}
+\item 在用户空间运行更多的操作系统服务
+\item 例如窗口管理器在大多数操作系统中是用户态实现的
+\end{itemize}
+\item 对于操作系统开发者，微内核更容易模块化以及Deug
+\item 但对于用户程序来说，微内核的好处并不显著（可能有潜在的可靠性提高），但很可能带来性能损失
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org8915268}]{未来方向}
+例如
+\begin{itemize}
+\item 应用成为一个自成体系的小型操作系统
+\begin{itemize}
+\item 当前的操作系统的设计中没有考虑这种情况。比如系统调用。
+\end{itemize}
+\item 资源分配决策对应用程序显式可见：传统上操作系统透明地进行资源分配决策，以提高整体性能。
+\begin{itemize}
+\item 这种透明性意味着应用程序不知道资源使用情况，也无法做出优化。
+\end{itemize}
 \end{itemize}
 \end{frame}
 \end{document}
