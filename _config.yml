@@ -51,9 +51,12 @@ collections:
   notes:
     output: true
     order: 10
-  cases:
+  readings:
     output: true
     order: 20
+  cases:
+    output: true
+    order: 30
   scraps:
     output: true
-    order: 25
+    order: 40
