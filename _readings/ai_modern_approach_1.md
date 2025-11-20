@@ -34,8 +34,7 @@ tags: AI
 ### **智能体的定义**
    - 智能体通过**传感器**感知环境，通过**执行器**行动，其行为由**智能体函数**（从感知序列到行动的映射）决定。
    - 示例：真空吸尘器智能体（根据当前位置和灰尘状态决定移动或清洁）。
-
-    ![Agents interact with environments through sensors and actuators](../assets/static/2025/agents.jpg)
+  ![Agents interact with environments through sensors and actuators](../assets/static/2025/agents.jpg)
 
 ### **理性与性能度量**
    - 一般原则：根据要实现目标而不是根据智能体如何表现来设计性能度量
