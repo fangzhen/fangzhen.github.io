@@ -1,9 +1,0 @@
-#+INCLUDE: "../assets/beamer_common.org::common" :only-contents t
-
-#+TITLE:     读书笔记
-#+SUBTITLE:  操作系统：原理与实践 - 第二卷 并发
-#+AUTHOR:
-#+EMAIL:
-#+DATE:
-
-* 并发与线程
