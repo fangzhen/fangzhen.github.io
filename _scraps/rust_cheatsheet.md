@@ -46,7 +46,10 @@ cargo也有`unstable`和`feature`，可以参考下面cargo部分。
 ### Attributes
 <https://doc.rust-lang.org/reference/attributes.html>
 
-attribute是一种通用的metadata，形如`#[Attr]`(outer attributes)或`#![Attr]`(inner attributes)，在编译时处理。
+Attribute 是一种通用的metadata，用于向编译器提供额外的信息或指令，以改变代码的编译方式或行为。
+Attribute 可以应用于整个 crate、模块、函数、结构体、枚举等各种项(item)，在编译时处理。
+形如`#[Attr]`(outer attributes, 应用于紧随其后的项)或`#![Attr]`(inner attributes, 应用于包含它的项)
+
 可以分为四类
 - Builtin attributes, 例如`cfg`，`test`， `derive`等。`#![feature]`也是一种builtin attribute。
 - Macro attrbutes，通过`attribute macro`定义的attribute。
@@ -136,6 +139,35 @@ rustup 管理的某个rust installation称为toolchain。可以给toolchain配�
 `cargo +nightly build` 使用`nightly` toolchain。
 
 可以在项目目录中通过`rust-toolchain`或`rust-toolchain.toml`来指定当前项目使用的toolchain。
+
+## Platform Support
+
+### 概述
+<https://doc.rust-lang.org/nightly/rustc/platform-support.html>
+
+Rust对平台的支持分为三级（Tier）：
+- Tier 1: guaranteed to work
+- Tier 2: guaranteed to build
+- Tier 3: Rust codebase 有支持，但Rust项目不会针对对应平台自动build或测试。
+
+支持的平台用“Target Triple”来表示，如`x86_64-unknown-linux-gnu`、`aarch64-apple-darwin`。
+
+
+**Target 主要功能是为rustc指定一些codegen和linking的参数**。为了实现这一点，主要有几种方式：
+
+1. builtin target triple的默认配置或自定义target json。
+   - 使用`rustc --print target-list`列出所有的builtin target triple。
+   - 使用`rustc --print target-spec-json --target <target-triple>`可以输出target具体的json内容。
+   - 自定义target json可以通过内置target的json结合代码或文档(如<https://doc.rust-lang.org/beta/nightly-rustc/rustc_target/spec/index.html>)来编写自己的target。
+   - cargo和rustc都可以通过target 三元组或json文件指定target。
+
+2. 通过cargo的config.toml也可以指定target相关的参数，覆盖三元组的默认配置。参考
+   <https://doc.rust-lang.org/cargo/reference/config.html?highlight=target#target>
+   应该注意，cargo的`[target]` table和target 三元组或target json文件虽然有关系，但不是直接对应的（并不是相同的字段直接覆盖）。
+
+3. 直接指定rustc参数的方式。
+   上述两种方式最终也是通过rustc的选项生效。
+   <https://doc.rust-lang.org/rustc/codegen-options/index.html>
 
 ### toolchain 和target的关系
 toolchain对应的是当前机器上的rust工具链，如cargo，rustc，rust-analyzer，也就是对应的工具要在本地运行；而target是当前代码要编译的目标环境，跟本地的环境没关系。

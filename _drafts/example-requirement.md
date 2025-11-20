@@ -1,6 +1,7 @@
 ---
 documentclass: extarticle
 fontsize: 14pt
+date: 2024-11-01
 ---
 ## 原始需求
 ### 一、平台定位与核心价值

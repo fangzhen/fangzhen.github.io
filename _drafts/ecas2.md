@@ -1,6 +1,7 @@
 ---
 layout: post
 title: ecas设计
+date: 2024-10-1
 ---
 ## 数据中心分层模型
 ```
@@ -140,11 +141,6 @@ Q: 甚至ECAS的名称都不准确了？
 
 A:
 
--------------------
-<br />
-
--------------
-<br />
 
 ---------------
 <br />
@@ -253,12 +249,6 @@ ECAS需要
       vendor: Intel
 ```
 
--------------------
-<br />
-
--------------
-<br />
-
 ---------------
 <br />
 
@@ -277,77 +267,3 @@ ECAS需要
 3. 性能
    * 单个机器上网卡，磁盘数量可能比较多，最终cr数量可能比节点数高一个数量级
 
-
-
------------------
-<br/>
-
-
-进程管理
-进程调度
-进程间通信
-系统调用
-内存管理
-中断处理
-同步；死锁
-timer
-存储：VFS, block io
-设备和模块
-安全
-可移植性
-
-文件系统 磁盘到文件到文件系统分层抽象
-输入输出
-虚拟化
-监控告警 问题分析 数据统计
-性能
-隔离 isolation 性能/资源 & 安全
-
-网络 通信
-利用率
-资源管理与分配
-
-borg:
-(1) hides the details of resource management and failure handling so its users can focus on application development instead;
-(2) operates with very high reliability and availability, and supports applications that do the same;
-(3) lets us run workloads across tens of thousands of machines effectively
-
-
-Kernel
- 负载调度
-   资源模型
-   负载模型
-   调度算法
- 负载隔离
-   资源隔离
-   安全性
- Debug/Failure handling/Inspect
-
-
-基础设施（分布式应用）
-  IAM
-  分布式存储/SDS
-  SDN
-  IPC，如Queue，REST API, 服务发现，分布式锁等
-  监控告警
-
-芯片简史
-1. 创新的土壤
-2. 高价值的创新对创新者的回报
-3. 技术突破的速度
-4. 创新成果的价值识别
-5. 接下来技术突破在哪？
-
-集成与互联 -- 数据中心也是
-
-计算理论导引
-
-自动机 可计算性理论/图灵机 计算复杂性
-
-芯片战争
-跨越鸿沟
-
-中国历代政治得失
-乡土中国
-
-硬件的重要性：速度/位置
